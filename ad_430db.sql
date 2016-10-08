@@ -66,10 +66,22 @@ CREATE TABLE convo_rating
 		REFERENCES convo (convo_id)
 );
 
+CREATE VIEW intrepreter_ratings AS  
+SELECT u.user_id, 
+	AVG(cr.friendliness) AS avg_friendliness, 
+    AVG(cr.asl_skill) AS avg_asl_skill, 
+    AVG(cr.translate_speed) AS avg_translate_speed,
+    SUM(ISNULL(ur.blocking_user_id)) as total_complaint_count,
+    SUM(was_reported) as total_report_count
+FROM user u
+LEFT JOIN convo co
+ON u.user_id = co.interpreter_user_id
+LEFT JOIN convo_rating cr
+ON cr.convo_id = co.convo_id
+LEFT JOIN user_report ur
+ON ur.blocking_user_id = u.user_id
+WHERE u.is_interpreter
+GROUP BY u.user_id;
 
-CREATE VIEW user AS
-SELECT column_name(s)
-FROM table_name
-WHERE condition
 
 
