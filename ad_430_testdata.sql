@@ -1,4 +1,4 @@
-USE ad_430db;
+USE ad430_db;
 
 INSERT INTO user(
 	
