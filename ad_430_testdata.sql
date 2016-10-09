@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS ad430_db;
 USE ad430_db;
 
 INSERT INTO user(
