@@ -13,20 +13,20 @@ INSERT INTO user(
     last_known_location_lat, 
     last_knonw_location_long
 )VALUES
- ("microAccts01", "Seattle PersonA", 0, 1, 1, 47.608013, -122.335167),
- ("microAccts02", "Seattle PersonB", 0, 1, 1, 47.608013, -122.335167),
- ("microAccts03", "Seattle PersonC", 1, 0, 1, 47.608013, -122.335167),
- ("microAccts04", "Seattle PersonD", 1, 0, 1, 47.608013, -122.335167),
+ ("microAccts01", "Seattle PersonA", 0, 1, 1, 47.6080, -122.3351),
+ ("microAccts02", "Seattle PersonB", 0, 1, 1, 47.6080, -122.3351),
+ ("microAccts03", "Seattle PersonC", 1, 0, 1, 47.6080, -122.3351),
+ ("microAccts04", "Seattle PersonD", 1, 0, 1, 47.6080, -122.3351),
  
- ("microAccts05", "Tacoma PersonA", 0, 1, 0, 47.2528768, -122.4442906),
- ("microAccts06", "Tacoma PersonB", 0, 1, 0, 47.2528768, -122.4442906),
- ("microAccts07", "Tacoma PersonC", 1, 0, 0, 47.2528768, -122.4442906),
- ("microAccts08", "Tacoma PersonD", 1, 0, 0, 47.2528768, -122.4442906),
+ ("microAccts05", "Tacoma PersonA", 0, 1, 0, 47.2528, -122.4442),
+ ("microAccts06", "Tacoma PersonB", 0, 1, 0, 47.2528, -122.4442),
+ ("microAccts07", "Tacoma PersonC", 1, 0, 0, 47.2528, -122.4442),
+ ("microAccts08", "Tacoma PersonD", 1, 0, 0, 47.2528, -122.4442),
  
- ("microAccts09", "Bellevue PersonA", 0, 1, 1, 47.608013, -122.335167),
- ("microAccts10", "Bellevue PersonB", 0, 1, 1, 47.608013, -122.335167),
- ("microAccts11", "Bellevue PersonC", 1, 1, 1, 47.608013, -122.335167),
- ("microAccts12", "Bellevue PersonD", 1, 1, 1, 47.608013, -122.335167)
+ ("microAccts09", "Bellevue PersonA", 0, 1, 1, 47.6080, -122.3351),
+ ("microAccts10", "Bellevue PersonB", 0, 1, 1, 47.6080, -122.3351),
+ ("microAccts11", "Bellevue PersonC", 1, 1, 1, 47.6080, -122.3351),
+ ("microAccts12", "Bellevue PersonD", 1, 1, 1, 47.6080, -122.3351)
 ;
 
 INSERT INTO user_report(
