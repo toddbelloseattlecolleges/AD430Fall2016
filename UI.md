@@ -24,6 +24,16 @@
 * ???
 
 ####Physical Requests Page where Hard of Hearing people will select a radius for interpreters, and tap a "make request" button.
+* A text field to add a range to check for
+* A request now button
+* Error state fragment in case there are no intreperters within the specified range
+* On the error state fragment there are three buttons: Change Range, Try Video Chat, NLP
+* Clicking on the Change range button goes to the main Physical Request view with the range text box selected
+* Clicking on the Video button takes the user to the Video call flow
+* Clicking on the NLP button takes the user to the NLP chat page
+* Success state fragment that indicates an interpreter is on the way
+
+####Settings Page
 * ???
 
 ###4 push notifications:
