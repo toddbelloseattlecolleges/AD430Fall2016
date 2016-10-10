@@ -23,3 +23,4 @@ Austin Amort
 15. Build a JSON object with all of retrieved information 4hrs
 16. Send JSON object when API is hit 4 hrs
 17. Prioritize requests coming in with a priority queue 16 hrs
+18. Extract login and account information from the DB for Microsoft authentication: 8hrs
