@@ -22,6 +22,7 @@
 
 ####NLP chat page will support Google Voice TTS, keyboard, and scrolling conversation history
 * ???
+
 ####Physical Requests Page where Hard of Hearing people will select a radius for interpreters, and tap a "make request" button.
 * ???
 
