@@ -13,12 +13,13 @@
 
 ####Main Page (Interpreter)
 * Has 2 check boxes with buttons
-* One butten toggles the indicator for video interpretation
-* Another button toggles the indicator for physical interpretation
+* Video butten toggles the indicator for video interpretation
+* Physical button toggles the indicator for physical interpretation
 * When video indicator is on, then interpreter user will be available to HOH users for video
 * When video indicator is off, then interpreter user will **not** be available to HOH users for video
 * When physical indicator is off, then interpreter user will be available to HOH users for physical interpretation
 * When physical indicator is off, then interpreter user will **not** be available to HOH users for physical interpretation
+* If user closes app. The indicators are still respected, and they be avaible based on indicators.
 
 ####NLP chat page will support Google Voice TTS, keyboard, and scrolling conversation history
 
