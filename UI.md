@@ -5,18 +5,23 @@
 * Allow users to sign in with microsoft account, or create a microsoft account, then proceed to Main Page.
 
 ####Main Page (Hard of Hearing)
-* Has 3 buttons (NLP, Video, Physical)  
+* Has 3 buttons (NLP, Video, Physical)
+* Clicking video button starts a video request
+* Clicking video button takes users to request page
+* Clicking physical button takes users to physical request page
+* Clicking NLP button takes user to the NLP chat window
 
 ####Main Page (Interpreter)
 * Has 2 check boxes with buttons
 * One butten toggles the indicator for video interpretation
 * Another button toggles the indicator for physical interpretation
-* When video indicator is on, then interpreter user will show to HOH users in video section
-* When video indicator is off, then interpreter user will **not** show to HOH users in video section
-* When physical indicator is off, then interpreter user will **not** show to HOH users in physical section
-* When physical indicator is off, then interpreter user will **not** show to HOH users in physical section
+* When video indicator is on, then interpreter user will be available to HOH users for video
+* When video indicator is off, then interpreter user will **not** be available to HOH users for video
+* When physical indicator is off, then interpreter user will be available to HOH users for physical interpretation
+* When physical indicator is off, then interpreter user will **not** be available to HOH users for physical interpretation
 
 ####NLP chat page will support Google Voice TTS, keyboard, and scrolling conversation history
+
 ####Physical Requests Page where Hard of Hearing people will select a radius for interpreters, and tap a "make request" button.
 
 ###4 push notifications:
