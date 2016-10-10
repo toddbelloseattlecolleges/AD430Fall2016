@@ -5,7 +5,8 @@
 -NLP chat page will support Google Voice TTS, keyboard, and scrolling conversation history
 -Physical Requests Page where Hard of Hearing people will select a radius for interpreters, and tap a "make request" button.
 ###4 push notifications:
--New Video Request for interpreter => accept/deny buttons 
--Video request accepted for Hard of Hearing user => start button
--New Physical Request for interpreter => accept/deny buttons 
--Physical Interpreter on the way (no buttons necessary
+
+* New Video Request for interpreter => accept/deny buttons  
+* Video request accepted for Hard of Hearing user => start button  
+* New Physical Request for interpreter => accept/deny buttons  
+* Physical Interpreter on the way (no buttons necessary
