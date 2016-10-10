@@ -6,8 +6,7 @@
 
 ####Main Page (Hard of Hearing)
 * Has 3 buttons (NLP, Video, Physical)
-* Clicking video button starts a video request
-* Clicking video button takes users to request page
+* Clicking video button starts a video request and takes users to request page
 * Clicking physical button takes users to physical request page
 * Clicking NLP button takes user to the NLP chat window
 
@@ -27,7 +26,30 @@
 
 ###4 push notifications:
 
-* New Video Request for interpreter => accept/deny buttons  
-* Video request accepted for Hard of Hearing user => start button  
-* New Physical Request for interpreter => accept/deny buttons  
-* Physical Interpreter on the way (no buttons necessary
+####New Video Request for interpreter
+* Notification has accept and deny buttons
+* Notification has icon from app
+* Notification has text so user knows it a video request for interpretation
+* Clicking accept starts app and takes user to video chat with HOH user
+* Clicking accept also notifies HOH user that interpreter is ready for video 
+* Clicking deny dismisses the notification and HOH user is notified of rejection?
+
+####Video request accepted for Hard of Hearing user  
+* notification has icon for app
+* notification lets user know that interpreter is ready for video
+* Clicking notification takes user to video chat
+* Dismissing notification?
+ 
+####New Physical Request for interpreter
+* Notification has accept and deny buttons
+* Notification has icon from app
+* Notification has text so user knows it a physical request for interpretation
+* Clicking accept starts app and takes user to map with location?
+* Clicking accept also notifies HOH user that someone is on the way
+* Clicking deny dismisses the notification and HOH user is notified of rejection?
+
+####Physical Interpreter on the way (no buttons necessary
+* Notification has icon for app
+* Notification lets user know that interpreter is on their way
+* Clicking notification takes user to???
+* Dismissing notification?
