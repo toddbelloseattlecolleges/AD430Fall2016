@@ -2,7 +2,7 @@
 ###Main Windows
 
 ####Signup/Login Page
-- [ ] Allow users to sign in with microsoft account, or create a microsoft account, then proceed to Main Page.
+- [ ] Allow users to sign in with Microsoft account, or create a Microsoft account, then proceed to Main Page.
 
 ####Main Page (Hard of Hearing)
 - [ ] Has 3 buttons (NLP, Video, Physical)
@@ -12,13 +12,13 @@
 
 ####Main Page (Interpreter)
 - [ ] Has 2 check boxes with buttons
-- [ ] Video butten toggles the indicator for video interpretation
+- [ ] Video button toggles the indicator for video interpretation
 - [ ] Physical button toggles the indicator for physical interpretation
 - [ ] When video indicator is on, then interpreter user will be available to HOH users for video
 - [ ] When video indicator is off, then interpreter user will **not** be available to HOH users for video
 - [ ] When physical indicator is off, then interpreter user will be available to HOH users for physical interpretation
 - [ ] When physical indicator is off, then interpreter user will **not** be available to HOH users for physical interpretation
-- [ ] If user closes app. The indicators are still respected, and they be avaible based on indicators.
+- [ ] If user closes app. The indicators are still respected, and they be available based on indicators.
 
 ####NLP chat page will support Google Voice TTS, keyboard, and scrolling conversation history
 - [ ] ???
@@ -26,7 +26,7 @@
 ####Physical Requests Page where Hard of Hearing people will select a radius for interpreters, and tap a "make request" button.
 - [ ] A text field to add a range to check for
 - [ ] A request now button
-- [ ] Error state fragment in case there are no intreperters within the specified range
+- [ ] Error state fragment in case there are no interpreters within the specified range
 - [ ] On the error state fragment there are three buttons: Change Range, Try Video Chat, NLP
 - [ ] Clicking on the Change range button goes to the main Physical Request view with the range text box selected
 - [ ] Clicking on the Video button takes the user to the Video call flow
