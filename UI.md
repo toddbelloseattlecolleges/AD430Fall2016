@@ -1,4 +1,4 @@
-##UI Requirements:  
+ ##UI Requirements:  
 ###Main Windows
 
 ####Signup/Login Page
@@ -36,8 +36,8 @@
 ####Settings Page
 - [ ] Setting page can be accessed from any page.
 - [ ] Setting will have a personal photo of the interrupter and the user.
-- [ ]Next the photo the settings will have the user first and last name.
-- [ ]rofile setting allow to update personal photo and name of user.
+- [ ] Next the photo the settings will have the user first and last name.
+- [ ] rofile setting allow to update personal photo and name of user.
 - [ ]	Do not disturb setting and Push notifications.
 - [ ]	Advanced setting
 - [ ]	Location enabled.
