@@ -24,3 +24,4 @@ Austin Amort
 16. Send JSON object when API is hit -- Test by writing the output to a webpage: 4hrs
 17. Prioritize requests coming in with a priority queue -- Test by sending multiple requests and verifying via direct observation: 16hrs
 18. Extract login and account information from the DB for Microsoft authentication -- Test via direct query of the DB: 8hrs
+19. Return all intrepeters ordered by distance -- Test by using two devices in close proximity: 10hrs
