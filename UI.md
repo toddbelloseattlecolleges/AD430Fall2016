@@ -34,7 +34,20 @@
 - [ ] Success state fragment that indicates an interpreter is on the way
 
 ####Settings Page
-- [ ] ???
+- [ ] Setting page can be accessed from any page.
+- [ ] Setting will have a personal photo of the interrupter and the user.
+- [ ]Next the photo the settings will have the user first and last name.
+- [ ]rofile setting allow to update personal photo and name of user.
+- [ ]	Do not disturb setting and Push notifications.
+- [ ]	Advanced setting
+- [ ]	Location enabled.
+- [ ]	Acceptable radios.
+- [ ]	Minimum rating.
+- [ ]	 Auto timeout.
+- [ ]	Change theme (use default vs custom settings)
+- [ ]	Captions > language , text size , white/black
+- [ ]	About > app version, send feedback, help(Q&A) and developer info 
+
 
 ###4 push notifications:
 
