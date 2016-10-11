@@ -1,4 +1,4 @@
-package northseattlecollege.app;
+package northseattlecollege.ASLBuddy;
 
 import org.junit.Test;
 
