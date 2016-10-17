@@ -3,6 +3,7 @@ package northseattlecollege.ASLBuddy;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -18,15 +19,18 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,11 +53,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * A dummy authentication store containing known user names and passwords.
+     * foo@example.com is interpreter, bar@example.com is HOH
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+
+    private boolean isInterpreter;
+
+    /**
+     * Variables related to new user Sign Up
+     */
+    private boolean isNewUser = false;
+    private boolean isNewInterpreter;
+    private String newMicrosoftEmail;
+    private String newPassword;
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -68,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -204,6 +221,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
+     * handles the radio button choices for new user sign-up
+     * @param view selected view
+     */
+    private void setUserType(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        if (checked) {
+            switch (view.getId()) {
+
+                case R.id.HohUser:
+                    isNewUser = true;
+                    isNewInterpreter = false;
+                    break;
+
+                case R.id.InterpreterUser:
+                    isNewUser = true;
+                    isNewInterpreter = true;
+                    break;
+            }
+        }
+    }
+
+    /**
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -318,15 +357,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
+            // TODO: instead of logging in with dummy credentials, check against database
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                    if (pieces[1].equals(mPassword)) {
+
+                        // for debugging, if email is foo@example.com we login as interpreter
+                        isInterpreter = mEmail.equals("foo@example.com");
+                        return true;
+                    }
                 }
             }
 
-            // TODO: register the new account here.
+            // TODO: register the new account here, return false if can't register
             return true;
         }
 
@@ -337,6 +382,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
+                // start next activity depending on the logged in user-type
+                Intent navigationIntent;
+                if (isInterpreter) {
+                    navigationIntent = new Intent(LoginActivity.this, MenuInterpreter.class);
+                } else {
+                    navigationIntent = new Intent(LoginActivity.this, MenuHOH.class);
+                }
+                LoginActivity.this.startActivity(navigationIntent);
+
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
