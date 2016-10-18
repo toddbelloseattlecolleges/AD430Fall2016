@@ -8,7 +8,7 @@ import android.os.Bundle;
  * Created 10/10/2016
  */
 
-public class PhysicalRequests extends AppCompatActivity {
+public class CreateRequest extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
