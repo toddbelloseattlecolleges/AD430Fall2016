@@ -23,13 +23,16 @@
 ####NLP chat page will support Google Voice TTS, keyboard, and scrolling conversation history
 - [ ] ???
 
-####Physical Requests Page where Hard of Hearing people will select a radius for interpreters, and tap a "make request" button.
-- [ ] A text field to add a range to check for
-- [ ] A request now button
-- [ ] Error state fragment in case there are no interpreters within the specified range
-- [ ] On the error state fragment there are three buttons: Change Range, Try Video Chat, NLP
-- [ ] Clicking on the Change range button goes to the main Physical Request view with the range text box selected
-- [ ] Clicking on the Video button takes the user to the Video call flow
+####Create Requests Page - where Hard of Hearing make request
+- [ ] Page shows if HOH users is creating a video or physical request
+- [ ] If creating a physical request, then page has a field to set radius from which is look for translators
+- [ ] Has subject drop down: Medical, Educational, Confidential, et cetera
+- [ ] Has detail text to put more info about the request (150 char max)
+- [ ] Has a request now button
+- [ ] Error state fragment in case there are no interpreters found
+- [ ] On the error state fragment there are three buttons: Change Range (if video), Try Video Chat (if location), and try NLP
+- [ ] Clicking on the Change range button goes to Create Request view for physical with the range text box selected
+- [ ] Clicking on the Video button takes the user to Create Request view for video
 - [ ] Clicking on the NLP button takes the user to the NLP chat page
 - [ ] Success state fragment that indicates an interpreter is on the way
 
@@ -48,30 +51,34 @@
 - [ ]	Captions > language , text size , white/black
 - [ ]	About > app version, send feedback, help(Q&A) and developer info 
 
+####View Request Page - This is for translators.
+- [ ] Clicking location or physical notification takes user to this page
+- [ ] Shows HOH profile pic
+- [ ] Shows HOH user name
+- [ ] Shows Type of request: Physical/Video
+- [ ] If location request, then shows location
+- [ ] If video request, then does NOT show location
+- [ ] Shows request subject (medical, confidential, educational, et cetera)
+- [ ] Shows request details. Limited to 150 chars.
+- [ ] Page has accept and deny buttons
+- [ ] If video request, then clicking ACCEPT takes user to video chat with HOH user
+- [ ] If physical request, then clicking ACCEPT takes user to video chat with HOH user
+- [ ] Click ACCEPT also notifies HOH users that request is accepted
+- [ ] Clicking DENY dismisses the notification and HOH user is notified of rejection?
 
-###4 push notifications:
+###3 push notifications:
 
-####New Video Request for interpreter
-- [ ] Notification has accept and deny buttons
-- [ ] Notification has icon from app
-- [ ] Notification has text so user knows it a video request for interpretation
-- [ ] Clicking accept starts app and takes user to video chat with HOH user
-- [ ] Clicking accept also notifies HOH user that interpreter is ready for video
-- [ ] Clicking deny dismisses the notification and HOH user is notified of rejection?
+####Request for translation notification
+- [ ] notification has icon for app
+- [ ] When translator gets a physical or video request, then they get this request notification 
+- [ ] Notification has short text that tells translator they have a pending request.
+- [ ] Clicking notification starts app and takes translator to View Request page for the request.
 
 ####Video request accepted for Hard of Hearing user  
 - [ ] notification has icon for app
 - [ ] notification lets user know that interpreter is ready for video
 - [ ] Clicking notification takes user to video chat
 - [ ] Dismissing notification?
-
-####New Physical Request for interpreter
-- [ ] Notification has accept and deny buttons
-- [ ] Notification has icon from app
-- [ ] Notification has text so user knows it a physical request for interpretation
-- [ ] Clicking accept starts app and takes user to map with location?
-- [ ] Clicking accept also notifies HOH user that someone is on the way
-- [ ] Clicking deny dismisses the notification and HOH user is notified of rejection?
 
 ####Physical Interpreter on the way (no buttons necessary
 - [ ] Notification has icon for app
