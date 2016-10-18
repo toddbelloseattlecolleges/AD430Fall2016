@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 
 /**
- * Author: Kellan Nealy
+ * Author: Brandon Lorenz
  * Created 10/10/2016
  */
 
-public class RequestsPending extends AppCompatActivity {
+public class RequestPending extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

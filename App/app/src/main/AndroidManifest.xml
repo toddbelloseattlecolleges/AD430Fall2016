@@ -25,11 +25,12 @@
         <activity android:name=".MenuHOH" />
         <activity android:name=".MenuInterpreter" />
         <activity android:name=".HearingTool" />
-        <activity android:name=".PhysicalRequests" />
-        <activity android:name=".RequestsPending" />
+        <activity android:name=".CreateRequest" />
+        <activity android:name=".RequestPending" />
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".ViewRequest"></activity>
     </application>
 
 </manifest>
