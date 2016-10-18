@@ -71,43 +71,42 @@ Testing: we will need a few dummy skype accounts to test this process out, and a
 ## Client/API level Requirements for Login page:
 ### Login Page
 - [ ] Verify Windows live account
-- [ ] Need to call to the windows live API to see if account exists.
+- [ ] Need to call to the Windows live API to see if account exists.
 - [ ] Check if the client exists.
 - [ ] Login if exists
 - [ ] Setup option for new account needed
-- [ ] When no login information we will need to send them to the microsoft live account page Create Microsoft account for application
-- [ ] We will need to register our application to be able to ping the Microsoft api
+- [ ] When no login information we will need to send them to the Microsoft Live account page to create a Microsoft account for app
+- [ ] We will need to register our application to be able to ping the Microsoft API
 - [ ] Create account
 - [ ] Test account for verification
-- Get skype username from user
-
+- [ ] Get Skype username from user
 
 
 Duri Balat's MileStone 1
 Location Requirements
-Following are the listed requirements for the Client API.  
+## Following are the listed requirements for the Client API.  
 
-HOH MenuPage - 
+### HOH MenuPage
 Physical Interpreter
-- Once the Physical Interpreter button is clicked by user, the user's coordinates will be pulled from their current location by longitude and latitude GPS coordinates.  AndroidStudio uses LocationManager and pulls the coordinates of the user. 
-- Needs to request permission of user to allow the application to use the users' coordinates
-- User's location will update by locationManager.requestLocationUpdates(type of data, time to update (by milliseconds), min Distance the user needs to travel to update, appointed locationListener)
+- [ ] Once the Physical Interpreter button is clicked by user, the user's coordinates will be pulled from their current location by longitude and latitude GPS coordinates.  AndroidStudio uses LocationManager and pulls the coordinates of the user. 
+- [ ] Needs to request permission of user to allow the application to use the users' coordinates
+- [ ] User's location will update by locationManager.requestLocationUpdates(type of data, time to update (by milliseconds), min Distance the user needs to travel to update, appointed locationListener)
 
-PhysicalRequest_Page - 
+### PhysicalRequest_Page
 Required: User's current GPS Location is required; if not, prompt the user to enter desired address. 
 - User will be prompted to entered distances to find interpreters within the vicinity. 
 - A list of users sorted by distance (closest to farthest) shall be listed (perhaps along with past reviews from other users)
 - If users, aren't available at the appointed address (current or desired by user); PhysicalRequest_Error page will appear asking the user if they would like to perhaps Skype with another interpreter or use Natural Language Processor (NLP); or even change the range of search.  
 
-InterpreterMain_Page - 
+### InterpreterMain_Page
 - When the user signs in as an Interpreter, their location must be pulled as well.  
 
-Completed requirements:
-I have completed the Physical Interpreter button function allowing the pull of user's coordinates.
+## Completed requirements:
+- [x] I have completed the Physical Interpreter button function allowing the pull of user's coordinates.
 
-Requirements to complete by the next two weeks (Estimated hours used to completed - 2 hours per day):
-- Look up Haversine function (server or client side) - make a decision with serverside (Grant)
-- JSON to post onto user platform (sorted list of interpreters for the users)
+## Requirements to complete by the next two weeks (Estimated hours used to completed - 2 hours per day):
+- [ ] Look up Haversine function (server or client side) - make a decision with serverside (Grant)
+- [ ] JSON to post onto user platform (sorted list of interpreters for the users)
 
 I believe the group is still on track.  
 
