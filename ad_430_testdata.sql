@@ -54,16 +54,17 @@ INSERT INTO convo(
     hoh_user_id,
     start_time,
     interpreter_user_id,
-    last_updated_time
+    last_updated_hoh,
+    last_updated_interpreter
     
     
 ) VALUES
-( 1, NOW(), 2, NOW() ),
-( 1, NOW(), 3, NOW() ),
-( 4, NOW(), 6, NOW() ),
-( 5, NOW(), 7, NOW() ),
-( 8, NOW(), 10, NOW() ),
-( 9, NOW(), 11, NOW() )
+( 1, NOW(), 2, NOW(), NOW()  ),
+( 1, NOW(), 3, NOW(), NOW() ),
+( 4, NOW(), 6, NOW(), NOW()  ),
+( 5, NOW(), 7, NOW(), NOW()  ),
+( 8, NOW(), 10, NOW(), NOW()  ),
+( 9, NOW(), 11, NOW(), NOW()  )
 
 ;INSERT INTO convo_rating(
 	convo_id, 

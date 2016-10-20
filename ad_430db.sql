@@ -44,7 +44,8 @@ CREATE TABLE convo
     end_time					DATETIME		NULL,
     hoh_user_id					INT				UNSIGNED		NOT NULL,
     interpreter_user_id			INT				UNSIGNED		NOT NULL,
-    last_updated_time			DATETIME		NOT NULL,
+    last_updated_hoh			DATETIME		NOT NULL,
+    last_updated_interpreter	DATETIME		NOT NULL,
 	CONSTRAINT cstr_convo_fk_interpreter_user_id
 		FOREIGN KEY (interpreter_user_id)
 		REFERENCES user (user_id),
