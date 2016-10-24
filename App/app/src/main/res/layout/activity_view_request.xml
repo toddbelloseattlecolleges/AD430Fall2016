@@ -10,4 +10,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="northseattlecollege.ASLBuddy.ViewRequest">
 
+    <TextView
+        android:text="View Request\nFor Interpreters\nBrandon Lorenz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/label_view_request" />
 </RelativeLayout>
