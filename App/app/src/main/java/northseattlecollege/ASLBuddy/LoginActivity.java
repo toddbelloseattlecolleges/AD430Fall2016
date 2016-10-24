@@ -167,6 +167,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return;
         }
 
+        isInterpreter = getIsInterpreter();
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -320,6 +322,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    public boolean getIsInterpreter() {
+        RadioButton isInterpreter = (RadioButton) findViewById(R.id.InterpreterUser);
+        return isInterpreter.isChecked();
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
