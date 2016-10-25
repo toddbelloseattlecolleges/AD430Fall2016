@@ -14,7 +14,7 @@
         android:text="I'm available to translate for:\n"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
+        android:id="@+id/pageCaption"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -26,8 +26,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_above="@+id/back"
+        android:layout_below="@+id/pageCaption">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -38,7 +39,7 @@
                 android:text="Video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
+                android:id="@+id/videoToggleCaption"
                 android:layout_weight="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="24sp" />
@@ -47,7 +48,7 @@
                 android:text="ToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/toggleButton6" />
+                android:id="@+id/videoToggle" />
 
         </LinearLayout>
 
@@ -60,7 +61,7 @@
                 android:text="Location"
                 android:layout_width="wrap_content"
                 android:layout_height="277dp"
-                android:id="@+id/textView4"
+                android:id="@+id/locationToggleCaption"
                 android:layout_weight="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="24sp" />
@@ -69,7 +70,7 @@
                 android:text="ToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/toggleButton7" />
+                android:id="@+id/locationToggle" />
         </LinearLayout>
 
     </LinearLayout>
@@ -78,10 +79,9 @@
         android:text="Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/back"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/label_menu_interpreter"
-        android:layout_alignEnd="@+id/label_menu_interpreter"
-        android:layout_marginBottom="32dp"
-        android:id="@+id/back" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -326,7 +326,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public boolean getIsInterpreter(String emailAddress) {
-        return emailAddress.equals("int@int");
+        // This is for testing purposes. logging in with int@int will navigate to interpreter main
+        return emailAddress.toLowerCase().equals("int@int");
     }
 
     private interface ProfileQuery {
