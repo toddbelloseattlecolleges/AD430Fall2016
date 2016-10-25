@@ -167,6 +167,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return;
         }
 
+
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -177,6 +179,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         boolean cancel = false;
         View focusView = null;
+
+        // is interpreter?
+        isInterpreter = getIsInterpreter(email);
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -320,6 +325,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    public boolean getIsInterpreter(String emailAddress) {
+        // This is for testing purposes. logging in with int@int will navigate to interpreter main
+        return emailAddress.toLowerCase().equals("int@int");
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
