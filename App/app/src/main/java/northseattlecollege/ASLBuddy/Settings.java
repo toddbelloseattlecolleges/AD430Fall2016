@@ -1,6 +1,5 @@
 package northseattlecollege.ASLBuddy;
 
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;

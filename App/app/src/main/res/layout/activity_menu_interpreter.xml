@@ -74,4 +74,14 @@
 
     </LinearLayout>
 
+    <Button
+        android:text="Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/label_menu_interpreter"
+        android:layout_alignEnd="@+id/label_menu_interpreter"
+        android:layout_marginBottom="32dp"
+        android:id="@+id/back" />
+
 </RelativeLayout>
