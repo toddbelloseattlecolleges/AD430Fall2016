@@ -322,11 +322,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
-    public boolean getIsInterpreter(String emailAddress) {
-        // This is for testing purposes. logging in with int@int will navigate to interpreter main
-        return emailAddress.toLowerCase().equals("int@int");
-    }
-
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
