@@ -20,61 +20,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:weightSum="1"
-        android:layout_above="@+id/back"
-        android:layout_below="@+id/pageCaption">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/videoToggleCaption"
-                android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="24sp" />
-
-            <ToggleButton
-                android:text="ToggleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/videoToggle" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Location"
-                android:layout_width="wrap_content"
-                android:layout_height="277dp"
-                android:id="@+id/locationToggleCaption"
-                android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="24sp" />
-
-            <ToggleButton
-                android:text="ToggleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/locationToggle" />
-        </LinearLayout>
-
-    </LinearLayout>
-
     <Button
         android:text="Back"
         android:layout_width="wrap_content"
@@ -83,5 +28,30 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:layout_below="@+id/pageCaption"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Switch
+            android:text="Video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/videoSwitch"
+            android:textSize="24sp" />
+
+        <Switch
+            android:text="Location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationSwitch"
+            android:textSize="24sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>
