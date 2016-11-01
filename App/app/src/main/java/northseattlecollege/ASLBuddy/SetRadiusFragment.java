@@ -61,10 +61,10 @@ public class SetRadiusFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_set_radius, container, false);
 
-        radiusDisplay = (TextView)view.findViewById(R.id.textRadiusDisplay);
+        radiusDisplay = (TextView)view.findViewById(R.id.text_radius_display);
         radiusDisplay.setText(String.valueOf(radius) + " miles");
 
-        radiusValue = (SeekBar)view.findViewById(R.id.seekBarRadiusValue);
+        radiusValue = (SeekBar)view.findViewById(R.id.seek_bar_radius_value);
         radiusValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
