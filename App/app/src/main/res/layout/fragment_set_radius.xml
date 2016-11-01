@@ -23,7 +23,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textRadiusDisplay"
-                android:text=".25"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/textRadiusLabel"
                 android:layout_toEndOf="@+id/textRadiusLabel"
@@ -35,7 +34,7 @@
             android:id="@+id/seekBarRadiusValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="40"
+            android:max="39"
             android:progress="1" />
     </LinearLayout>
 

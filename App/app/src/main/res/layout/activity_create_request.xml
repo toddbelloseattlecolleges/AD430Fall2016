@@ -86,8 +86,8 @@
             android:inputType="textPersonName" />
     </LinearLayout>
 
-    <fragment android:name="northseattlecollege.ASLBuddy.SetRadiusFragment"
-        android:id="@+id/setRadius"
+    <FrameLayout
+        android:id="@+id/setRadiusFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
