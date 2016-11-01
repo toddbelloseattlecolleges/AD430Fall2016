@@ -111,4 +111,11 @@
         <item>Confidential</item>
         <item>Other</item>
     </string-array>
+
+    <string name="label_set_radius">Radius</string>
+    <string name="label_request_type">Request Type</string>
+    <string name="label_description">*if other, enter description here.</string>
+    <string name="label_details">Details</string>
+    <string name="label_back">Back</string>
+    <string name="label_submit">Submit</string>
 </resources>
