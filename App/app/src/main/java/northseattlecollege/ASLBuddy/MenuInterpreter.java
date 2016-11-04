@@ -1,6 +1,7 @@
 package northseattlecollege.ASLBuddy;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,18 +43,33 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
         GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
     private SharedPreferences mPrefs;
-    private boolean locationServices;
     private Location location;
+    private boolean locationServices, videoServices;
+    private final Handler mHandler = new Handler();
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Switch videoSwitch, locationSwitch;
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private final static int MILISECONDS = 1000;
+    public Thread updateThread;
+    public InterpreterStatus status;
+    public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    public final static int FIVEMINUTES = 360;
+    public final static int MILISECONDS = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
+        //turns on automatically when activity is on, need to figure out how to use
+        //location services when requested
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_LOW_POWER)
+                .setInterval(10 * MILISECONDS)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * MILISECONDS); // 1 second, in milliseconds
 
         Button backButton = (Button) findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +83,17 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
 
+        //getting the status from the database here in the separate class
+        status = new InterpreterStatus();
+        //this is where you would get the interpreter status based on previous database settings
+        locationServices = status.getLocationStatus();
+        videoServices = status.getVideoStatus();
+
+        //true for debugging purposes
+        locationServices = true;
+        locationSwitch.setChecked(locationServices);
+        setUpdateLocationThread();
+
         videoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
@@ -74,104 +101,61 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
             }
         });
 
-        //have to check the status of whether or not the locationServices are already on
-        //based on the status of the interpreter from the database
-        locationServices = false;
-        if(locationServices){
-            startLocationServices();
-        }
-
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //if the interpreter has selected to do location services, turn on the settings
                 if(isChecked){
-                    startLocationServices();
-                    locationServices = true;
-                    onLocationChanged(location);
-
-                    double currentLatitude = location.getLatitude();
-                    double currentLongitude = location.getLongitude();
                     //update the database here with the locationServices availability,
-                    //as well as the new location
-
+                    locationServices = true;
+                    setUpdateLocationThread();
+                    updateThread.start();
                     //call thread here too
                 } else {
+                    locationServices = false;
+                    killUpdateLocationThread();
 
                 }
-                // true if the switch is in the On position
             }
         });
-
         //sets shared preferences so that settings can remember if an interpreter
         //is available for location services
 //        mPrefs = getSharedPreferences("locationServices", 0);
-        //test button implemented, ultimately, we will only want to use location services
 
     }
 
-    /**
-     * Method that starts the google api services
-     */
-    public void startLocationServices() {
-        //only instantiate this when called
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * MILISECONDS)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * MILISECONDS); // 1 second, in milliseconds
-        //checks if gps is enabled
-        try {
-            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        } catch (SecurityException e) {
-            popupUserSettings();
-        }
 
-    }
 
     @Override
     public void onConnected(Bundle bundle) {
-        //only connect the location if location services are available
-        if (locationServices) {
-            try {
-                location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-            if (location == null) {
-                try {
-                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                } catch (SecurityException e) {
-                    // notify user
-                    popupUserSettings();
-                }
-            } else {
-                onLocationChanged(location);
-            }
-        }
+        onLocationChanged(location);
+        updateThread.start();
     }
 
 
     @Override
     protected void onResume() {
-        //connect only if the user settings were checked for locationservices
+        //if locationServices are on from user settings, turn the thread back on
+        if(status.getLocationStatus()){
+            //connect to location services here
+            locationServices = true;
+        }
         mGoogleApiClient.connect();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
-        SharedPreferences.Editor ed = mPrefs.edit();
-        ed.putBoolean("locationServices", locationServices);
-        ed.commit();
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            mGoogleApiClient.disconnect();
+//        if (mGoogleApiClient.isConnected()) {
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//            mGoogleApiClient.disconnect();
+//        }
+        if(updateThread != null && updateThread.isAlive()){
+            //kills update thread
+            locationServices = false;
+            updateThread.interrupt();
+            updateThread = null;
         }
+        super.onPause();
     }
 
     @Override
@@ -214,10 +198,10 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
             this.location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         } catch (SecurityException e){
+            e.printStackTrace();
             popupUserSettings();
         }
     }
-
 
     //Method that sends user to settings menu, to be used if GPS is not enabled and services are
     //asked for
@@ -248,17 +232,34 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
      * to the server database, to be called in the activity when location services
      * are set to available by interpreter
      */
-    public void updateInterpreterLocation() {
-        new Thread(new Runnable() {
+    private void setUpdateLocationThread() {
+        updateThread =  new Thread(new Runnable() {
             @Override
             public void run() {
-                //run the method here to update database here
-                try {
-                    Thread.sleep(360 * MILISECONDS);
-                } catch(Exception e){
-
+                while (locationServices) {
+                    try {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //code here for the actual database update
+                                double currentLatitude = location.getLatitude();
+                                double currentLongitude = location.getLongitude();
+                                System.out.println(currentLatitude + " " + currentLongitude);
+                            }
+                        });
+                        Thread.sleep(FIVEMINUTES * MILISECONDS);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
                 }
             }
-        }).start();
+        });
+    }
+
+    private void killUpdateLocationThread(){
+          if(updateThread.isAlive()){
+              updateThread.interrupt();
+              updateThread = null;
+          }
     }
 }
