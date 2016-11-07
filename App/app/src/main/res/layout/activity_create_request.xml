@@ -11,17 +11,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="northseattlecollege.ASLBuddy.CreateRequest">
 
-    <!-- Physical Request -->
     <TextView
         android:id="@+id/label_create_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Create request"
         android:textSize="34sp" />
 
-
-    <LinearLayout
+     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

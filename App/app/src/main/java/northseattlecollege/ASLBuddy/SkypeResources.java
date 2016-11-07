@@ -44,8 +44,6 @@ public class SkypeResources {
         Intent myIntent = new Intent(Intent.ACTION_VIEW, marketUri);
         myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         myContext.startActivity(myIntent);
-
-
     }
 
     /**
@@ -67,8 +65,6 @@ public class SkypeResources {
         // presence of its handler (although there is an extremely minute window where that
         // handler can go away).
         myContext.startActivity(myIntent);
-
-
     }
 
     /**

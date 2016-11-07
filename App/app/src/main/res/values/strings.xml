@@ -118,4 +118,6 @@
     <string name="label_details">Details</string>
     <string name="label_back">Back</string>
     <string name="label_submit">Submit</string>
+    <string name="label_create_physical_request">Create Physical request</string>
+    <string name="label_create_video_request">Create Video request</string>
 </resources>
