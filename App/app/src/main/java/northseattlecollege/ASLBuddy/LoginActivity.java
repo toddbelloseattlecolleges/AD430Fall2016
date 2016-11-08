@@ -216,7 +216,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
             PasswordUtilities.GenerateRandomSalt(16);
-            PasswordUtilities.HashAndSaltPassword(password);
+            System.out.println(PasswordUtilities.HashAndSaltPassword(password));
         }
     }
 
