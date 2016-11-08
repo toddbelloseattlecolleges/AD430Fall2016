@@ -59,14 +59,6 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
-        //getting the status from the database here in the separate class
-        status = new InterpreterStatus();
-        //this is where you would get the interpreter status based on previous database settings
-        locationServices = status.getLocationStatus();
-        videoServices = status.getVideoStatus();
-        //true for debugging purposes
-        locationServices = true;
-
         //turns on automatically when activity is on, need to figure out how to use
         //location services when requested
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -75,7 +67,7 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
                 .addApi(LocationServices.API)
                 .build();
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setPriority(LocationRequest.PRIORITY_LOW_POWER)
                 .setInterval(10 * MILISECONDS)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * MILISECONDS); // 1 second, in milliseconds
 
@@ -91,7 +83,16 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
 
+        //getting the status from the database here in the separate class
+        status = new InterpreterStatus();
+        //this is where you would get the interpreter status based on previous database settings
+        locationServices = status.getLocationStatus();
+        videoServices = status.getVideoStatus();
+
+        //true for debugging purposes
+        locationServices = true;
         locationSwitch.setChecked(locationServices);
+//        setUpdateLocationThread();
 
         videoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -106,7 +107,8 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
                 if(isChecked){
                     //update the database here with the locationServices availability,
                     locationServices = true;
-                    startUpdateLocationThread();
+                    setUpdateLocationThread();
+                    updateThread.start();
                     //call thread here too
                 } else {
                     locationServices = false;
@@ -121,19 +123,13 @@ public class MenuInterpreter extends AppCompatActivity implements GoogleApiClien
 
     }
 
-    //method that setup and starts the thread to update the database
-    private void startUpdateLocationThread() {
-        setUpdateLocationThread();
-        updateThread.start();
-    }
 
 
     @Override
     public void onConnected(Bundle bundle) {
         onLocationChanged(location);
-        if(locationServices) {
-            startUpdateLocationThread();
-        }
+        setUpdateLocationThread();
+        updateThread.start();
     }
 
 
