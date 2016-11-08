@@ -10,16 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="northseattlecollege.ASLBuddy.MenuInterpreter">
 
-    <TextView
-        android:text="I'm available to translate for:\n"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/pageCaption"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -43,6 +33,42 @@
             android:id="@+id/locationSwitch"
             android:textSize="24sp" />
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="Skype Status:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/skypeStatusCaption"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material"
+                android:textSize="24sp" />
+
+            <TextView
+                android:text="Online"
+                android:layout_height="wrap_content"
+                android:id="@+id/skypeStatus"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material"
+                android:textSize="24sp"
+                android:textColor="@android:color/holo_green_dark"
+                android:textAlignment="textEnd"
+                android:layout_width="wrap_content" />
+        </LinearLayout>
+
     </LinearLayout>
+
+    <TextView
+        android:text="I'm available to translate for:\n"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pageCaption"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
