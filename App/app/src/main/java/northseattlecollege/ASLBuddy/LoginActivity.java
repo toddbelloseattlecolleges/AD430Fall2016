@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import northseattlecollege.ASLBuddy.PasswordUtilities;
 
 /**
  * Author: Kellan Nealy
@@ -46,7 +47,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  *
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>{
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -82,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +191,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
+
         }
 
         // Check for a valid email address.
@@ -212,6 +215,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            PasswordUtilities.GenerateRandomSalt(16);
+            System.out.println(PasswordUtilities.HashAndSaltPassword(password));
         }
     }
 
