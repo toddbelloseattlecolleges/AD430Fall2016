@@ -23,6 +23,7 @@ import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -46,6 +47,7 @@ import northseattlecollege.ASLBuddy.PasswordUtilities;
  * Created 10/10/2016
  *
  * A login screen that offers login via email/password.
+ * Also supports creating new accounts and password security.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>{
 
@@ -70,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private boolean isNewUser = false;
     private boolean isNewInterpreter;
-    private String newMicrosoftEmail;
+    private String newEmail;
     private String newPassword;
 
     /**
@@ -115,11 +117,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        // get rid of the keyboard, should not come up on create
-        InputMethodManager imm = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mEmailView.getWindowToken(), 0);
     }
 
     private void populateAutoComplete() {
@@ -164,7 +161,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -206,10 +202,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // Error, request focus of form field
             focusView.requestFocus();
         } else {
+            // get rid of the keyboard, should not come up on create
+            InputMethodManager imm = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
+
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
@@ -340,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
     }
-
+    
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -361,7 +361,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 return false;
             }
