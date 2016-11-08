@@ -49,11 +49,9 @@ import northseattlecollege.ASLBuddy.PasswordUtilities;
  * A login screen that offers login via email/password.
  * Also supports creating new accounts and password security.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>{
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
+    // ID to identity READ_CONTACTS permission request.
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
@@ -65,19 +63,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             "foo@example.com:hello", "bar@example.com:world"
     };
 
+    // Variables for user login
     private boolean isInterpreter;
 
-    /**
-     * Variables related to new user Sign Up
-     */
+    // Variables for new user Sign Up
     private boolean isNewUser = false;
     private boolean isNewInterpreter;
     private String newEmail;
     private String newPassword;
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+    // Variables keeping track of the login task
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -119,6 +114,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    /**
+     * Populates emails in the email input
+     */
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -126,6 +124,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         getLoaderManager().initLoader(0, null, this);
     }
 
+    /**
+     * Checks to see if this application can request contacts
+     */
     private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
@@ -164,7 +165,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * errors are presented and no actual login attempt or API request is made.
      */
     private void attemptLogin() {
         if (mAuthTask != null) {
@@ -187,7 +188,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-
         }
 
         // Check for a valid email address.
@@ -195,6 +195,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
+
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
@@ -220,11 +221,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Method for client-side email validation
+     */
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
+    /**
+     * Method for client-side password validation
+     */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
@@ -288,6 +295,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Handler method for populating email input with emails read from
+     * the Android device, and prefers primary email.
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -305,6 +316,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+    /**
+     * Handler method for storing the emails loaded for autocomplete
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -317,11 +331,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         addEmailsToAutoComplete(emails);
     }
 
+    /**
+     * Handler method for when the loader resets
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
     }
 
+    /**
+     * Adds the emails stored from the loader to the email autocomplete
+     */
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -331,6 +351,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    /**
+     * Interface necessary for email input autocomplete
+     */
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -342,8 +365,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
     
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
+     * Represents an asynchronous login/signup task used to authenticate
+     * the user and possibly create a new account in the database.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
