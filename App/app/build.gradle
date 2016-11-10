@@ -31,9 +31,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:23.4.0'
     testCompile 'junit:junit:4.12'
     compile 'com.google.code.gson:gson:2.2.4'
-    compile files('commons-collections4-4.1.jar')
-    compile files('commons-codec-1.10.jar')
-    compile files('httpcore-4.4.4.jar')
+    
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
