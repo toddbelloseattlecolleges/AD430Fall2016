@@ -12,7 +12,7 @@ INSERT INTO user(
     ok_to_show_location,
     last_known_location_lat, 
     last_knonw_location_long,
-    hashed_passowrd
+    hashed_password
 )VALUES
  ("skypeUN01", "Seattle PersonA", 0, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
  ("skypeUN02", "Seattle PersonB", 0, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),

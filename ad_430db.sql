@@ -14,7 +14,7 @@ CREATE TABLE user
     last_known_location_lat		DECIMAL(7,4)	NULL,
     last_knonw_location_long	DECIMAL(7,4)	NULL,
     last_location_update		DATETIME		NULL,
-    hashed_passowrd			VARCHAR(250)	NOT NULL
+    hashed_password			VARCHAR(250)	NOT NULL
 );
 CREATE INDEX ind_user_skype_username ON user(skype_username);
 
