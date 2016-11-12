@@ -5,7 +5,7 @@ use ad430_db;
 CREATE TABLE user
 (
 	user_id 					INT 			UNSIGNED		PRIMARY KEY 	AUTO_INCREMENT,
-    microsft_api_info 			VARCHAR(100)	UNIQUE 			NOT NULL,
+    skype_username	 			VARCHAR(100)	UNIQUE 			NOT NULL,
 	full_name					VARCHAR(250) 	NOT NULL,
 	last_active_time			DATETIME		NULL,
     is_interpreter				BIT				NOT NULL,
@@ -13,9 +13,10 @@ CREATE TABLE user
     ok_to_show_location			BIT				NOT NULL,
     last_known_location_lat		DECIMAL(7,4)	NULL,
     last_knonw_location_long	DECIMAL(7,4)	NULL,
-    last_location_update		DATETIME		NULL
+    last_location_update		DATETIME		NULL,
+    hashed_passowrd			VARCHAR(250)	NOT NULL
 );
-CREATE INDEX ind_user_microsft_api_info ON user(microsft_api_info);
+CREATE INDEX ind_user_skype_username ON user(skype_username);
 
 CREATE TABLE user_report
 (

@@ -2,7 +2,7 @@ USE ad430_db;
 
 INSERT INTO user(
 	
-    microsft_api_info, 
+    skype_username, 
     full_name, 
     
     
@@ -11,22 +11,23 @@ INSERT INTO user(
     ok_to_chat, 
     ok_to_show_location,
     last_known_location_lat, 
-    last_knonw_location_long
+    last_knonw_location_long,
+    hashed_passowrd
 )VALUES
- ("microAccts01", "Seattle PersonA", 0, 1, 1, 47.6080, -122.3351),
- ("microAccts02", "Seattle PersonB", 0, 1, 1, 47.6080, -122.3351),
- ("microAccts03", "Seattle PersonC", 1, 0, 1, 47.6080, -122.3351),
- ("microAccts04", "Seattle PersonD", 1, 0, 1, 47.6080, -122.3351),
+ ("skypeUN01", "Seattle PersonA", 0, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN02", "Seattle PersonB", 0, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN03", "Seattle PersonC", 1, 0, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN04", "Seattle PersonD", 1, 0, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
  
- ("microAccts05", "Tacoma PersonA", 0, 1, 0, 47.2528, -122.4442),
- ("microAccts06", "Tacoma PersonB", 0, 1, 0, 47.2528, -122.4442),
- ("microAccts07", "Tacoma PersonC", 1, 0, 0, 47.2528, -122.4442),
- ("microAccts08", "Tacoma PersonD", 1, 0, 0, 47.2528, -122.4442),
+ ("skypeUN05", "Tacoma PersonA", 0, 1, 0, 47.2528, -122.4442, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN06", "Tacoma PersonB", 0, 1, 0, 47.2528, -122.4442, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN07", "Tacoma PersonC", 1, 0, 0, 47.2528, -122.4442, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN08", "Tacoma PersonD", 1, 0, 0, 47.2528, -122.4442, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
  
- ("microAccts09", "Bellevue PersonA", 0, 1, 1, 47.6080, -122.3351),
- ("microAccts10", "Bellevue PersonB", 0, 1, 1, 47.6080, -122.3351),
- ("microAccts11", "Bellevue PersonC", 1, 1, 1, 47.6080, -122.3351),
- ("microAccts12", "Bellevue PersonD", 1, 1, 1, 47.6080, -122.3351)
+ ("skypeUN09", "Bellevue PersonA", 0, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN10", "Bellevue PersonB", 0, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN11", "Bellevue PersonC", 1, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash"),
+ ("skypeUN12", "Bellevue PersonD", 1, 1, 1, 47.6080, -122.3351, "invalidpasswordhashinvalidpasswordhashinvalidpasswordhashinvalidpasswordhash")
 ;
 
 INSERT INTO user_report(
