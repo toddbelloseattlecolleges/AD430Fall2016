@@ -27,25 +27,23 @@ public class MenuInterpreter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
 
-        Button backButton = (Button) findViewById(R.id.back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent navigationIntent = new Intent(MenuInterpreter.this, LoginActivity.class);
-                MenuInterpreter.this.startActivity(navigationIntent);
-            }
-        });
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
 
         //getting the status from the database here in the separate class
         status = new InterpreterStatus();
-
         locationService = new LocationService(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent navigationIntent = new Intent(MenuInterpreter.this, LoginActivity.class);
+        MenuInterpreter.this.startActivity(navigationIntent);
     }
 
     public void SetLocation(Location location) {
         this.location = location;
+        System.out.println(this.location.getLatitude() + " " + this.location.getLongitude());
     }
 }
