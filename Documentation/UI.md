@@ -41,7 +41,7 @@
 - [ ] Clicking on the Video button takes the user to Create Request view for video
 - [ ] Clicking on the Hearing Tool button takes the user to the Hearing Tool chat page
 - [ ] Success state fragment that indicates an interpreter is on the way.
-- [ ] Skype status is displayed, whether or not this interpreter has linked their Skype account with their ASL buddy account.
+~~- [ ] Skype status is displayed, whether or not this interpreter has linked their Skype account with their ASL buddy account.~~
 
 ####Settings Page
 - [ ] Setting page can be accessed from any page.
