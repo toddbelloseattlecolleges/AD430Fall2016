@@ -30,11 +30,11 @@
 - [x] Will support scrolling conversation history.
 
 ####Create Requests Page - where Hard of Hearing make request
-- [ ] Page shows if HOH users is creating a video or physical request
-- [ ] If creating a physical request, then page has a field to set radius from which is look for translators
-- [ ] Has subject drop down: Medical, Educational, Confidential, et cetera
-- [ ] Has detail text to put more info about the request (150 char max)
-- [ ] Has a request now button
+- [x] Page shows if HOH users is creating a video or physical request
+- [x] If creating a physical request, then page has a field to set radius from which is look for translators
+- [x] Has subject drop down: Medical, Educational, Confidential, et cetera
+- [x] Has detail text to put more info about the request (150 char max)
+- [x] Has a request now button
 - [ ] Error state fragment in case there are no interpreters found
 - [ ] On the error state fragment there are three buttons: Change Range (if video), Try Video Chat (if location), and try Hearing Tool
 - [ ] Clicking on the Change range button goes to Create Request view for physical with the range text box selected
