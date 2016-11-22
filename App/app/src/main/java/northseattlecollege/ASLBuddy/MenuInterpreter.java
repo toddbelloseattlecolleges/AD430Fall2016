@@ -20,6 +20,7 @@ public class MenuInterpreter extends AppCompatActivity {
 
     private final UpdateSkypeStatus updateSkypeStatus;
     private final UpdateVideoStatus updateVideoStatus;
+    private final UpdateLocationStatus updateLocationStatus;
     private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
     public InterpreterStatus status;
@@ -31,10 +32,8 @@ public class MenuInterpreter extends AppCompatActivity {
 
         updateSkypeStatus = new UpdateSkypeStatus();
         updateVideoStatus = new UpdateVideoStatus();
+        updateLocationStatus = new UpdateLocationStatus();
     }
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +42,7 @@ public class MenuInterpreter extends AppCompatActivity {
 
         updateSkypeStatus.execute();
         updateVideoStatus.execute();
+        updateLocationStatus.execute();
 
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
@@ -94,18 +94,17 @@ public class MenuInterpreter extends AppCompatActivity {
         }
     }
 
-    private class UpdateVideoStatus extends AsyncTask<Void, Void, Boolean> {
+    private class UpdateLocationStatus extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return status.getVideoStatus();
+            return status.getLocationStatus();
         }
 
         protected void onPostExecute(Boolean status) {
-            videoSwitch.setChecked(status);
+            locationSwitch.setChecked(status);
         }
     }
-
 }
 
 

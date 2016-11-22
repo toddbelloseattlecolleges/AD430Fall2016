@@ -53,7 +53,13 @@ public class InterpreterStatus {
     }
 
     public boolean getLocationStatus(){
-        return false;
+        //simulate network taking awhile
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+
+        }
+        return true;
     }
 }
 
