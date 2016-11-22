@@ -9,36 +9,29 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="northseattlecollege.ASLBuddy.RequestPending">
-
+    <TextView
+        android:text="Interpreter Found:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/label_interpreter_found" />
     <TextView
         android:text="Finding Interpreter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="121dp"
-        android:id="@+id/FindInterp"
-        tools:text="Finding Interpreter"
-        android:textSize="20sp"
-        android:textStyle="normal|bold" />
-
-    <TextView
-        android:text="Please Do Not Close The App"
-        android:layout_height="20dp"
+        android:layout_below="@id/label_interpreter_found"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/Please"
-        tools:text="Please do not close the app"
-        android:layout_width="200dp" />
+        android:id="@+id/label_request_pending" />
+
 
     <Button
-        android:text="Cancel Request"
+        android:text="Call Interpreter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="63dp"
-        android:id="@+id/Cancel"
-        tools:text="Cancel Request"
-        android:onClick="showNotification"/>
+        android:id="@+id/label_finish_request"
+        android:visibility="invisible"
+        android:layout_below="@id/label_request_pending"/>
+
 </RelativeLayout>
