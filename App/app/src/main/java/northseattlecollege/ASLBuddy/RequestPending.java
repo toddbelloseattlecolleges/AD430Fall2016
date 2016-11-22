@@ -52,7 +52,7 @@ public class RequestPending extends AppCompatActivity {
         });
         //create a new request to contact the server and get the username of the interpreter
         //TODO:current URL string not valid, please update with correct API call
-        ServerRequestTask usernameGet = new ServerRequestTask("http://54.69.18.19:8081/getVideoInterpreters?userId=1");
+        ServerRequestTask usernameGet = new ServerRequestTask("http://54.69.18.19/getVideoInterpreters?userId=1");
 
     }
 
