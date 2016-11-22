@@ -6,6 +6,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.*;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +21,9 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,15 +78,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // Variables for new user Sign Up
     private boolean isNewUser = false;
     private boolean isNewInterpreter;
-    private String newEmail;
-    private String newPassword;
 
     // Variables keeping track of the login task
     private UserLoginTask mAuthTask = null;
+    private String successfulUserID = "";
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private AutoCompleteTextView existingEmailView;
+    private EditText existingPasswordView;
+    private AutoCompleteTextView newEmailView;
+    private EditText newPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -86,12 +96,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        // Set up the login form.
+        existingEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        populateAutoComplete();
+        newEmailView = (AutoCompleteTextView) findViewById(R.id.create_email);
+        populateAutoComplete();
+        existingPasswordView = (EditText) findViewById(R.id.password);
+        newPasswordView = (EditText) findViewById(R.id.password);
+        existingPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -102,10 +115,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        // events for SIGN IN
+        Button SignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        SignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                attemptLogin();
+            }
+        });
+
+        // events for SIGN UP
+        Button SignUpButton = (Button) findViewById(R.id.email_sign_up_button);
+        SignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isNewUser = true;
                 attemptLogin();
             }
         });
@@ -135,14 +159,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
+            Snackbar.make(existingEmailView, R.string.permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE).setAction(android.R.string.ok, new View.OnClickListener() {
+                    @Override
+                    @TargetApi(Build.VERSION_CODES.M)
+                    public void onClick(View v) {
+                        requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                    }
+                });
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
@@ -173,32 +197,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        existingEmailView.setError(null);
+        existingPasswordView.setError(null);
+        newEmailView.setError(null);
+        newPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
+        String email, password;
+        EditText curPasswordView;
+        AutoCompleteTextView curEmailView;
+        if (isNewUser) {
+            email = newEmailView.getText().toString();
+            password = newPasswordView.getText().toString();
+            curPasswordView = newPasswordView;
+            curEmailView = newEmailView;
+        } else {
+            email = existingEmailView.getText().toString();
+            password = existingPasswordView.getText().toString();
+            curPasswordView = existingPasswordView;
+            curEmailView = existingEmailView;
+        }
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            curPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = curPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            curEmailView.setError(getString(R.string.error_field_required));
+            focusView = curEmailView;
             cancel = true;
 
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            curEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = curEmailView;
             cancel = true;
         }
 
@@ -209,15 +246,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // get rid of the keyboard, should not come up on create
             InputMethodManager imm = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(curPasswordView.getWindowToken(), 0);
 
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-            PasswordUtilities.GenerateRandomSalt(16);
-            System.out.println(PasswordUtilities.HashAndSaltPassword(password));
         }
     }
 
@@ -225,7 +260,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Method for client-side email validation
      */
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        // regex validation 
         return email.contains("@");
     }
 
@@ -233,7 +268,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Method for client-side password validation
      */
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+        // regex validation 
         return password.length() > 4;
     }
 
@@ -247,12 +282,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             switch (view.getId()) {
 
                 case R.id.HohUser:
-                    isNewUser = true;
                     isNewInterpreter = false;
                     break;
 
                 case R.id.InterpreterUser:
-                    isNewUser = true;
                     isNewInterpreter = true;
                     break;
             }
@@ -272,19 +305,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
@@ -302,18 +335,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+            // Retrieve data rows for the device user's 'profile' contact.
+            Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
+                    ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
 
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
+            // Select only email addresses.
+            ContactsContract.Contacts.Data.MIMETYPE +
+                    " = ?", new String[]{ContactsContract.CommonDataKinds.Email
+            .CONTENT_ITEM_TYPE},
 
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+            // Show primary email addresses first. Note that there won't be
+            // a primary email address if the user hasn't specified one.
+            ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
     /**
@@ -345,10 +378,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+            new ArrayAdapter<>(LoginActivity.this,
+                android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        existingEmailView.setAdapter(adapter);
+        newEmailView.setAdapter(adapter);
     }
 
     /**
@@ -356,8 +390,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private interface ProfileQuery {
         String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+            ContactsContract.CommonDataKinds.Email.ADDRESS,
+            ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
         };
 
         int ADDRESS = 0;
@@ -380,16 +414,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
+            String response = "";
             try {
-                // Simulate network access.
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                return false;
+                response = loginHTTP(isNewUser, mEmail, mPassword);
+
+            } catch (Exception e) {
+                Log.d("ERROR", "error with login HTTP request:\n" + e.getMessage()
+                    + "\nStack Trace:\n" + e.getStackTrace().toString());
             }
 
-            // TODO: instead of logging in with dummy credentials, check against database
+            if (!response.isEmpty()) {
+                Log.d("RESPONSE", response);
+
+                // continue with JSON parsing
+                if (isNewUser) {
+                    // simply parse and store the user ID
+                } else {
+                    // validate password on the client side
+                    String hashFromDB = "";
+                    boolean isMatch = PasswordUtilities.VerifyPasswordMatch(mPassword, hashFromDB);
+                    if (isMatch) {
+                        // simply parse and store the user ID
+                    } else {
+                        // return false
+                    }
+                }
+            }
+
+
+            // TODO: instead of logging in with dummy credentials, finish above
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {}
+
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
@@ -402,8 +460,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
                 }
             }
-
-            // TODO: register the new account here, return false if can't register
             return true;
         }
 
@@ -424,8 +480,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 LoginActivity.this.startActivity(navigationIntent);
 
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                if (isNewUser) {
+                    newPasswordView.setError(getString(R.string.error_incorrect_password));
+                    newPasswordView.requestFocus();
+                } else {
+                    existingPasswordView.setError(getString(R.string.error_incorrect_password));
+                    existingPasswordView.requestFocus();
+                }
             }
         }
 
@@ -435,5 +496,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-}
 
+    private String loginHTTP(boolean isNewUser, String email, String pass) throws IOException {
+        InputStream is = null;
+        int length = 1000;
+
+        try {
+            URL url;
+            if (isNewUser) {
+                // New user API workflow
+                String hashSalt = PasswordUtilities.HashAndSaltPassword(pass);
+                Log.d("NEW USER HASH", "\n\n\n" + hashSalt + "\n\n");
+                int isInterpreterNum = isNewInterpreter ? 1 : 0;
+
+                url = new URL("http://54.69.18.19/createUser?userEmail="
+                        + email + "&isInterpreter=" + isInterpreterNum + "&hashedPassword="
+                        + hashSalt);
+            } else {
+                // Existing user API workflow
+                Log.d("EXISTING USER LOGIN", "\n" + email);
+                url = new URL("http://54.69.18.19/getPassword?userEmail=" + email);
+            }
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.connect();
+            int response = conn.getResponseCode();
+            Log.d("INFO", "The response is: " + response);
+            is = conn.getInputStream();
+
+            // Convert the InputStream into a string
+            String contentAsString = convertInputStreamToString(is, length);
+            return contentAsString;
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
+
+    public String convertInputStreamToString(InputStream stream, int length) throws IOException,
+            UnsupportedEncodingException {
+        Reader reader = null;
+        reader = new InputStreamReader(stream, "UTF-8");
+        char[] buffer = new char[length];
+        reader.read(buffer);
+        return new String(buffer);
+    }
+}
