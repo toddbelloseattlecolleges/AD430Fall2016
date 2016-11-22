@@ -120,4 +120,7 @@
     <string name="label_submit">Submit</string>
     <string name="label_create_physical_request">Create Physical request</string>
     <string name="label_create_video_request">Create Video request</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_install_skype">Install Skype</string>
+    <string name="label_skype_check">You must have Skype Installed to use this feature</string>
 </resources>

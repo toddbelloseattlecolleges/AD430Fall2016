@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,7 +29,11 @@ public class CreateRequest extends AppCompatActivity
     public final static String REQUEST_TYPE_VIDEO = "northseattlecollege.ASLBuddy.REQUEST_TYPE_VIDEO";
     public final static String REQUEST_TYPE_PHYSICAL = "northseattlecollege.ASLBuddy.REQUEST_TYPE_PHYSICAL";
 
+    public final static String REQUEST_RADIUS = "northseattlecollege.ASLBuddy.REQUEST_RADIUS";
+
     private String requestType;
+
+    private SetRadiusFragment setRadiusFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,37 +79,65 @@ public class CreateRequest extends AppCompatActivity
         });
     }
 
-    private void SubmitRequest() {
-        if (requestType.compareTo(REQUEST_TYPE_PHYSICAL) == 0) {
-            finish();
-            // ToDo: how are physical requests handled?
-            Intent navigationIntent = new Intent(CreateRequest.this, RequestPending.class);
-            CreateRequest.this.startActivity(navigationIntent);
-        } else {
-            if(SkypeResources.isSkypeClientInstalled(getApplicationContext())){
-                finish();
-                SkypeResources.initiateSkypeCall(getApplicationContext(), SkypeResources.getUsernameFromServer());
-                Intent navigationIntent = new Intent(CreateRequest.this, RequestPending.class);
-                CreateRequest.this.startActivity(navigationIntent);
-            } else {
-                // ToDo: What happens after this call?
-                SkypeResources.goToMarket(getApplicationContext());
-            }
+    private void setupVideoRequest() {
+        TextView title = (TextView) findViewById(R.id.label_create_request);
+        title.setText(R.string.label_create_video_request);
+        if (!SkypeResources.isSkypeClientInstalled(getApplicationContext())) {
+            LinearLayout requestLayout = (LinearLayout) findViewById(R.id.layout_create_request);
+            requestLayout.setVisibility(View.GONE);
+            LinearLayout installSkypeLayout = (LinearLayout) findViewById(R.id.layout_install_skype);
+            installSkypeLayout.setVisibility(View.VISIBLE);
+
+            Button installSkype = (Button) findViewById(R.id.button_install_skype);
+            installSkype.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SkypeResources.goToMarket(getApplicationContext());
+                }
+            });
+
+            Button cancel = (Button) findViewById(R.id.button_cancel);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                    Intent navigationIntent = new Intent(CreateRequest.this, MenuHOH.class);
+                    CreateRequest.this.startActivity(navigationIntent);
+                }
+            });
         }
     }
 
-    private void InitializeUI() {
-        TextView title = (TextView) findViewById(R.id.label_create_request);
+    private void SubmitRequest() {
+        Intent navigationIntent = new Intent(CreateRequest.this, RequestPending.class);
+
         if (requestType.compareTo(REQUEST_TYPE_PHYSICAL) == 0) {
-            title.setText(R.string.label_create_physical_request);
-            // ToDo: Get default/saved radius from Settings
-            SetRadiusFragment newFragment = SetRadiusFragment.newInstance(.25f);
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.set_radius_fragment_container, newFragment);
-            transaction.commit();
+            // ToDo: how are physical requests handled?
+            navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_PHYSICAL);
+            navigationIntent.putExtra(CreateRequest.REQUEST_RADIUS, setRadiusFragment.getRadius());
         } else {
-            title.setText(R.string.label_create_video_request);
+            navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_VIDEO);
         }
+        finish();
+        CreateRequest.this.startActivity(navigationIntent);
+    }
+
+    private void InitializeUI() {
+        if (requestType.compareTo(REQUEST_TYPE_PHYSICAL) == 0) {
+            setupPhysicalRequest();
+        } else {
+            setupVideoRequest();
+        }
+    }
+
+    private void setupPhysicalRequest() {
+        TextView title = (TextView) findViewById(R.id.label_create_request);
+        title.setText(R.string.label_create_physical_request);
+        // ToDo: Get default/saved radius from Settings
+        setRadiusFragment = SetRadiusFragment.newInstance(.25f);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.set_radius_fragment_container, setRadiusFragment);
+        transaction.commit();
     }
 
     private void UpdateOtherEditView(String selectedItem) {
