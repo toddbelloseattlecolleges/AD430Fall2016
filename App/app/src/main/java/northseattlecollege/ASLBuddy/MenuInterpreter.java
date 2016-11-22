@@ -19,8 +19,8 @@ import android.widget.TextView;
 public class MenuInterpreter extends AppCompatActivity {
 
     private final UpdateSkypeStatus updateSkypeStatus;
-    private final UpdateVideoStatus updateVideoStatus;
-    private final UpdateLocationStatus updateLocationStatus;
+    private final UpdateVideoStatus updateVideoSwitch;
+    private final UpdateLocationStatus updateLocationSwitch;
     private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
     public InterpreterStatus status;
@@ -31,8 +31,8 @@ public class MenuInterpreter extends AppCompatActivity {
     public MenuInterpreter() {
 
         updateSkypeStatus = new UpdateSkypeStatus();
-        updateVideoStatus = new UpdateVideoStatus();
-        updateLocationStatus = new UpdateLocationStatus();
+        updateVideoSwitch = new UpdateVideoStatus();
+        updateLocationSwitch = new UpdateLocationStatus();
     }
 
     @Override
@@ -41,8 +41,8 @@ public class MenuInterpreter extends AppCompatActivity {
         setContentView(R.layout.activity_menu_interpreter);
 
         updateSkypeStatus.execute();
-        updateVideoStatus.execute();
-        updateLocationStatus.execute();
+        updateVideoSwitch.execute();
+        updateLocationSwitch.execute();
 
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
