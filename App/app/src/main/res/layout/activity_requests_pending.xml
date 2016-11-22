@@ -17,7 +17,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/label_interpreter_found" />
     <TextView
-        android:text="Request Pending\nFor H-O-H users\nBrandon Lorenz"
+        android:text="Finding Interpreter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/label_interpreter_found"
@@ -33,4 +33,5 @@
         android:id="@+id/label_finish_request"
         android:visibility="invisible"
         android:layout_below="@id/label_request_pending"/>
+
 </RelativeLayout>
