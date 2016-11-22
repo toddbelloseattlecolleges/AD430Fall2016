@@ -61,5 +61,26 @@ public class InterpreterStatus {
         }
         return true;
     }
+    public void setSkypeName(String skypeName){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            //just a random endpoint for example
+            JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/setSkypeName?userId=1&skypeName=" + skypeName), JsonObj.class);
+            System.out.println(obj.getMessage());
+            System.out.println(obj.getSuccess());
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public boolean getSkypeName(){
+        //simulate network taking awhile
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+
+        }
+        return true;
+    }
 }
 
