@@ -83,7 +83,7 @@ public class CreateRequest extends AppCompatActivity
         } else {
             if(SkypeResources.isSkypeClientInstalled(getApplicationContext())){
                 finish();
-                SkypeResources.initiateSkypeCall(getApplicationContext(), SkypeResources.getUsernameFromServer());
+                //SkypeResources.initiateSkypeCall(getApplicationContext(), getUsernameFromServer() has been deprecated);
                 Intent navigationIntent = new Intent(CreateRequest.this, RequestPending.class);
                 CreateRequest.this.startActivity(navigationIntent);
             } else {
