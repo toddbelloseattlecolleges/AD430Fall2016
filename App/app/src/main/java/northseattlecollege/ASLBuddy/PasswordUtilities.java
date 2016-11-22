@@ -58,8 +58,6 @@ public class PasswordUtilities {
 		}
 		String salt = GenerateRandomSalt(SALT_RANDOM_LENGTH);
 		userEnteredPass = salt + userEnteredPass;
-		//String sha256hex = org.apache.commons.codec.digest.DigestUtils
-		//		.sha256Hex(userEnteredPass);
         String hash = new String(Hex.encodeHex(DigestUtils.sha(userEnteredPass)));
 		return salt + hash;
 	}
@@ -91,8 +89,7 @@ public class PasswordUtilities {
 
 		String salt = DBSaltAndPass.substring(0, SALT_RANDOM_LENGTH);
 		userEnteredPass = salt + userEnteredPass;
-		String sha256hex = org.apache.commons.codec.digest.DigestUtils
-				.sha256Hex(userEnteredPass);
-		return (salt + sha256hex).equals(DBSaltAndPass);
+		String hash = new String(Hex.encodeHex(DigestUtils.sha(userEnteredPass)));
+		return (salt + hash).equals(DBSaltAndPass);
 	}
 }

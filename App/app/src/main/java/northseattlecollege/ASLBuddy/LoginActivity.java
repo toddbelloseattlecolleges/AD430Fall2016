@@ -38,6 +38,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -103,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         newEmailView = (AutoCompleteTextView) findViewById(R.id.create_email);
         populateAutoComplete();
         existingPasswordView = (EditText) findViewById(R.id.password);
-        newPasswordView = (EditText) findViewById(R.id.password);
+        newPasswordView = (EditText) findViewById(R.id.create_password);
         existingPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -430,37 +433,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // continue with JSON parsing
                 if (isNewUser) {
                     // simply parse and store the user ID
+                    try {
+                        JSONObject responseJSON = new JSONObject(response);
+                        boolean wasSuccessful = responseJSON.getBoolean("success");
+                        if (wasSuccessful) {
+                            successfulUserID = responseJSON.getString("user_id");
+                            // find out if this is an interpreter user
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     // validate password on the client side
-                    String hashFromDB = "";
-                    boolean isMatch = PasswordUtilities.VerifyPasswordMatch(mPassword, hashFromDB);
-                    if (isMatch) {
-                        // simply parse and store the user ID
-                    } else {
-                        // return false
+                    try {
+                        JSONObject responseJSON = new JSONObject(response);
+                        String hashFromDB = responseJSON.getString("hashed_password");
+
+                        boolean isMatch = PasswordUtilities.VerifyPasswordMatch(mPassword,
+                                hashFromDB);
+                        if (isMatch) {
+                            successfulUserID = responseJSON.getString("user_id");
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-
-
-            // TODO: instead of logging in with dummy credentials, finish above
-            try {
-                Thread.sleep(5000);
-            } catch (Exception e) {}
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    if (pieces[1].equals(mPassword)) {
-
-                        // for debugging, if email is foo@example.com we login as interpreter
-                        isInterpreter = mEmail.equals("foo@example.com");
-                        return true;
-                    }
-                }
-            }
-            return true;
+            return false;
         }
 
         @Override
@@ -472,7 +477,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
                 // start next activity depending on the logged in user-type
                 Intent navigationIntent;
-                if (isInterpreter) {
+                if (isInterpreter || isNewInterpreter) {
                     navigationIntent = new Intent(LoginActivity.this, MenuInterpreter.class);
                 } else {
                     navigationIntent = new Intent(LoginActivity.this, MenuHOH.class);
