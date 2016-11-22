@@ -11,22 +11,25 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/label_set_radius"
-                android:text="@string/label_set_radius" android:layout_marginRight="10sp" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10sp"
+                android:paddingBottom="8dp"
+                android:text="@string/label_set_radius" />
+
+            <TextView
                 android:id="@+id/text_radius_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/label_set_radius"
                 android:layout_toEndOf="@+id/label_set_radius"
-                android:textColor="@color/colorAccent"/>
+                android:layout_toRightOf="@+id/label_set_radius"
+                android:textColor="@color/colorAccent" />
 
         </RelativeLayout>
 

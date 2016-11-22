@@ -28,6 +28,10 @@ public class SetRadiusFragment extends Fragment {
 
     private OnSetRadiusFragmentInteractionListener mListener;
 
+    public float getRadius() {
+        return radius;
+    }
+
     public SetRadiusFragment() {
         // Required empty public constructor
     }
