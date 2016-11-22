@@ -18,7 +18,7 @@
     <string name="action_logout">Logout</string>
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="sign_up_as">Sign-up as one of the following:</string>
-    <string name="error_invalid_email">This Microsoft email address is invalid</string>
+    <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>

@@ -25,7 +25,7 @@ public class PasswordUtilities {
 	 * http://stackoverflow.com/questions/18142745/how-do-i-generate-a-salt-in-
 	 * java-for-salted-hash
 	 * 
-	 * @param userEnteredPass
+	 * @param saltLength
 	 *            how long should be the new string be?
 	 * @return A randomly generated salt string
 	 */
@@ -58,8 +58,6 @@ public class PasswordUtilities {
 		}
 		String salt = GenerateRandomSalt(SALT_RANDOM_LENGTH);
 		userEnteredPass = salt + userEnteredPass;
-		//String sha256hex = org.apache.commons.codec.digest.DigestUtils
-		//		.sha256Hex(userEnteredPass);
         String hash = new String(Hex.encodeHex(DigestUtils.sha(userEnteredPass)));
 		return salt + hash;
 	}
@@ -70,29 +68,28 @@ public class PasswordUtilities {
 	 * 
 	 * @param userEnteredPass
 	 *            password user is trying to login in with currently
-	 * @param DBRecoredSaltAndPass
+	 * @param DBSaltAndPass
 	 *            password stored in the db to compare agaisnt.
 	 * @return true if they are, false if they are not
 	 */
-	public static Boolean VerifyPasswordMatchs(String userEnteredPass,
-			String DBRecoredSaltAndPass) {
+	public static Boolean VerifyPasswordMatch(String userEnteredPass,
+			String DBSaltAndPass) {
 		if (userEnteredPass == null || userEnteredPass.equals("")) {
 			throw new IllegalArgumentException(
 					"userEnteredPass must have value");
 		}
-		if (DBRecoredSaltAndPass == null || DBRecoredSaltAndPass.equals("")) {
+		if (DBSaltAndPass == null || DBSaltAndPass.equals("")) {
 			throw new IllegalArgumentException(
 					"DBRecoredSaltAndPass must have value");
 		}
-		if (DBRecoredSaltAndPass.length() <= SALT_RANDOM_LENGTH) {
+		if (DBSaltAndPass.length() <= SALT_RANDOM_LENGTH) {
 			throw new IllegalArgumentException(
 					"DB Password given is not long enough");
 		}
 
-		String salt = DBRecoredSaltAndPass.substring(0, SALT_RANDOM_LENGTH);
+		String salt = DBSaltAndPass.substring(0, SALT_RANDOM_LENGTH);
 		userEnteredPass = salt + userEnteredPass;
-		String sha256hex = org.apache.commons.codec.digest.DigestUtils
-				.sha256Hex(userEnteredPass);
-		return (salt + sha256hex).equals(DBRecoredSaltAndPass);
+		String hash = new String(Hex.encodeHex(DigestUtils.sha(userEnteredPass)));
+		return (salt + hash).equals(DBSaltAndPass);
 	}
 }
