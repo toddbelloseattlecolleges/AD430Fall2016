@@ -14,12 +14,20 @@ import android.widget.TextView;
 
 public class MenuInterpreter extends AppCompatActivity {
 
+    private final UpdateSkypeStatus updateSkypeStatus;
+    private final UpdateVideoStatus updateVideoStatus;
+
+    public MenuInterpreter() {
+
+        updateSkypeStatus = new UpdateSkypeStatus();
+        updateVideoStatus = new UpdateVideoStatus();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
 
-        UpdateSkypeStatus updateSkypeStatus = new UpdateSkypeStatus();
         updateSkypeStatus.execute();
    }
 
@@ -44,6 +52,18 @@ public class MenuInterpreter extends AppCompatActivity {
             TextView skypeStatus = (TextView) findViewById(R.id.skypeStatus);
             skypeStatus.setTextColor(statusTextColor);
             skypeStatus.setText(statusText);
+        }
+    }
+
+    private class UpdateVideoStatus extends AsyncTask<Void, Void, Boolean> {
+
+        public UpdateVideoStatus() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return null;
         }
     }
 }
