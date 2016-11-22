@@ -1,11 +1,15 @@
 package northseattlecollege.ASLBuddy;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Switch;
 import android.widget.TextView;
+
 
 /**
  * Author: Nathan Flint
@@ -16,6 +20,12 @@ public class MenuInterpreter extends AppCompatActivity {
 
     private final UpdateSkypeStatus updateSkypeStatus;
     private final UpdateVideoStatus updateVideoStatus;
+    private SharedPreferences mPrefs;
+    private Switch videoSwitch, locationSwitch;
+    public InterpreterStatus status;
+    private LocationService locationService;
+    private Location location;
+    private TextView skypeStatus;
 
     public MenuInterpreter() {
 
@@ -23,13 +33,25 @@ public class MenuInterpreter extends AppCompatActivity {
         updateVideoStatus = new UpdateVideoStatus();
     }
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
 
         updateSkypeStatus.execute();
-   }
+        updateVideoStatus.execute();
+
+        videoSwitch = (Switch)findViewById(R.id.videoSwitch);
+        locationSwitch = (Switch)findViewById(R.id.locationSwitch);
+        skypeStatus = (TextView) findViewById(R.id.skypeStatus);
+
+        //getting the status from the database here in the separate class
+        status = new InterpreterStatus("1");
+        locationService = new LocationService(this);
+    }
 
     @Override
     public void onBackPressed() {
@@ -37,6 +59,13 @@ public class MenuInterpreter extends AppCompatActivity {
         Intent navigationIntent = new Intent(MenuInterpreter.this, LoginActivity.class);
         MenuInterpreter.this.startActivity(navigationIntent);
     }
+
+    public void SetLocation(Location location) {
+        this.location = location;
+        System.out.println(this.location.getLatitude() + " " + this.location.getLongitude());
+
+    }
+
 
     private class UpdateSkypeStatus extends AsyncTask<Void, Void, Boolean> {
         protected Boolean doInBackground(Void... asdf) {
@@ -48,8 +77,6 @@ public class MenuInterpreter extends AppCompatActivity {
 
             String statusText = isSkypeInstalled ? "Installed" : "Not Installed";
             int statusTextColor = isSkypeInstalled ? Color.GREEN : Color.RED;
-
-            TextView skypeStatus = (TextView) findViewById(R.id.skypeStatus);
             skypeStatus.setTextColor(statusTextColor);
             skypeStatus.setText(statusText);
         }
@@ -57,15 +84,28 @@ public class MenuInterpreter extends AppCompatActivity {
 
     private class UpdateVideoStatus extends AsyncTask<Void, Void, Boolean> {
 
-        public UpdateVideoStatus() {
-
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return status.getVideoStatus();
         }
+
+        protected void onPostExecute(Boolean status) {
+            videoSwitch.setChecked(status);
+        }
+    }
+
+    private class UpdateVideoStatus extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return null;
+            return status.getVideoStatus();
+        }
+
+        protected void onPostExecute(Boolean status) {
+            videoSwitch.setChecked(status);
         }
     }
+
 }
 
 
