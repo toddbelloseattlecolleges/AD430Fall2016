@@ -55,8 +55,8 @@ public class MenuInterpreter extends AppCompatActivity implements LocationTaskLi
         status.getVideoStatus();
 
         //sets the switch based on the database setting
-        locationSwitch.setChecked(locationStatusOn);
-        videoSwitch.setChecked(videoStatusOn);
+
+
 
         videoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -136,10 +136,12 @@ public class MenuInterpreter extends AppCompatActivity implements LocationTaskLi
 
     public void processLocStatus(boolean status){
         locationStatusOn = status;
+        locationSwitch.setChecked(locationStatusOn);
     }
 
     public void processVideoStatus(boolean status){
         videoStatusOn = status;
+        videoSwitch.setChecked(videoStatusOn);
     }
 
 
