@@ -34,4 +34,19 @@
         android:visibility="invisible"
         android:layout_below="@id/label_request_pending"/>
 
+    <Button
+        android:text="Skip to next user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_skip_user"
+        android:layout_below="@id/label_finish_request"
+       />
+
+    <Button
+        android:text="Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_back"
+        android:layout_below="@id/label_skip_user"/>
+
 </RelativeLayout>

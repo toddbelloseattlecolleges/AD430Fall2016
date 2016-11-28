@@ -30,6 +30,9 @@ import java.net.URL;
 
 public class RequestPending extends AppCompatActivity {
 
+    //initialize useful variables for holding and iterating through available interpreters
+    JSONArray userArray;
+    int position;
 
 
 
@@ -38,8 +41,55 @@ public class RequestPending extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requests_pending);
 
+        userArray = null;
+        position = 0;
+
+
         final TextView response = (TextView)findViewById(R.id.label_request_pending);
         Button call = (Button)findViewById(R.id.label_finish_request);
+        final Button skip = (Button)findViewById(R.id.label_skip_user);
+        //can't skip until there are users in the array
+        skip.setClickable(false);
+
+        // ToDo: remove back button once system back button is working
+        // Back button for easy navigation
+        Button backButton = (Button) findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                Intent navigationIntent = new Intent(RequestPending.this, MenuHOH.class);
+                RequestPending.this.startActivity(navigationIntent);
+            }
+        });
+
+        //TODO: Make this button set current user ok_to_chat to false before switching to the new user
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //make sure we haven't reached the end of available users
+
+                if(position < userArray.length())
+                {
+                    position++;
+                    try{
+                    JSONObject skypeName = userArray.getJSONObject(position);
+                    response.setText(skypeName.get("skype_username").toString());
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                        System.out.println("Invalid Data from Server");
+                        skip.setClickable(false);
+                    }
+                }else{
+                    //get a new list of users
+                    skip.setClickable(false);
+                    finish();
+                    startActivity(getIntent());
+                }
+
+            }
+        });
+
 
         call.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +101,7 @@ public class RequestPending extends AppCompatActivity {
             }
         });
         //create a new request to contact the server and get the username of the interpreter
-        //TODO:current URL string not valid, please update with correct API call
+
         ServerRequestTask usernameGet = new ServerRequestTask("http://54.69.18.19/getVideoInterpreters?userId=1");
 
     }
@@ -102,7 +152,12 @@ public class RequestPending extends AppCompatActivity {
                 }
 
                 JSONArray username = new JSONArray(buffer.toString());
-                JSONObject skypeName = username.getJSONObject(0);
+                userArray = username;
+                //for debugging
+                System.out.println(username.toString());
+                System.out.println(username.length());
+
+                JSONObject skypeName = username.getJSONObject(position);
                 return skypeName.get("skype_username").toString();
 
                 //convert the buffered string to a JSON object
@@ -132,7 +187,7 @@ public class RequestPending extends AppCompatActivity {
             }
 
 
-            return "no data found";
+            return "No interpreters found please try again.";
         }
 
         //override this method again when you call the AsyncTask in another activity
@@ -145,6 +200,10 @@ public class RequestPending extends AppCompatActivity {
             //make the call button appear - this step could be removed but is helpful for testing
             Button call = (Button)findViewById(R.id.label_finish_request);
             call.setVisibility(View.VISIBLE);
+            Button skip = (Button)findViewById(R.id.label_skip_user);
+            if(userArray.length() >0 ) {
+                skip.setClickable(true);
+            }
 
 
         }
