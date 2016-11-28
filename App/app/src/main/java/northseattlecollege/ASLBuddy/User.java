@@ -4,10 +4,14 @@ package northseattlecollege.ASLBuddy;
  * Created by a Ghost on 11/5/2016.
  */
 
+import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Parcelable {
 
     private int userId;
     private String microsoftAPInfo;
@@ -16,8 +20,8 @@ public class User {
     private boolean isInterpreter;
     private boolean okToChat;
     private boolean okToShowLocation;
-    private int lastKnownLocationLat;
-    private int lastKnownLocationLong;
+    private double lastKnownLocationLat;
+    private double lastKnownLocationLong;
 
     public int getUserId() {
         return userId;
@@ -75,23 +79,23 @@ public class User {
         this.okToShowLocation = okToShowLocation;
     }
 
-    public int getLastKnownLocationLat() {
+    public double getLastKnownLocationLat() {
         return lastKnownLocationLat;
     }
 
-    public void setLastKnownLocationLat(int lastKnownLocationLat) {
+    public void setLastKnownLocationLat(double lastKnownLocationLat) {
         this.lastKnownLocationLat = lastKnownLocationLat;
     }
 
-    public int getLastKnownLocationLong() {
+    public double getLastKnownLocationLong() {
         return lastKnownLocationLong;
     }
 
-    public void setLastKnownLocationLong(int lastKnownLocationLong) {
+    public void setLastKnownLocationLong(double lastKnownLocationLong) {
         this.lastKnownLocationLong = lastKnownLocationLong;
     }
 
-    public int getLastLocationUpdate() {
+    public double getLastLocationUpdate() {
         return lastLocationUpdate;
     }
 
@@ -102,7 +106,61 @@ public class User {
     private int lastLocationUpdate;
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    /**
+     * Method that writes the instances of the class to save
+     * @param dest the Parcel that is going to be sent
+     * @param flags unused
+     */
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.userId);
+        dest.writeString(this.microsoftAPInfo);
+        dest.writeString(this.fullName);
+        dest.writeInt(this.lastActiveTime);
+        dest.writeByte(this.isInterpreter ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.okToChat ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.okToShowLocation ? (byte) 1 : (byte) 0);
+        dest.writeDouble(this.lastKnownLocationLat);
+        dest.writeDouble(this.lastKnownLocationLong);
+        dest.writeInt(this.lastLocationUpdate);
+    }
+
+    //reads parcel in the same order as the write
+    protected User(Parcel in) {
+        this.userId = in.readInt();
+        this.microsoftAPInfo = in.readString();
+        this.fullName = in.readString();
+        this.lastActiveTime = in.readInt();
+        this.isInterpreter = in.readByte() != 0;
+        this.okToChat = in.readByte() != 0;
+        this.okToShowLocation = in.readByte() != 0;
+        this.lastKnownLocationLat = in.readDouble();
+        this.lastKnownLocationLong = in.readDouble();
+        this.lastLocationUpdate = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+    //sending the intent
+//    MyParcelable dataToSend = new MyParcelable();
+//    Intent i = new Intent(this, NewActivity.class);
+//    i.putExtra("myData", dataToSend); // using the (String name, Parcelable value) overload!
 }
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UserReport{
 
