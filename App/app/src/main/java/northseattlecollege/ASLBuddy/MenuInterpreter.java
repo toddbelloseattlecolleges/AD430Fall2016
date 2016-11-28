@@ -41,8 +41,8 @@ public class MenuInterpreter extends AppCompatActivity implements LocationTaskLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
-
 //        user = (User)getIntent().getParcelableExtra("user");
+        //temp value for debugging
         userId = 1;
         locationService = new LocationService(this);
         status = new InterpreterStatus(userId, this);
@@ -54,41 +54,37 @@ public class MenuInterpreter extends AppCompatActivity implements LocationTaskLi
         status.getLocationStatus();
         status.getVideoStatus();
 
-        //sets the switch based on the database setting
-
-
-
         videoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
-                if(isChecked){
+//                if(isChecked){
                     //update the database here with the locationServices availability,
 //                    status.sendVideoStatus(true);
 //                    startUpdateLocationThread();
-                } else {
+                    status.setVideoStatus(isChecked);
+//                } else {
+//                    status.setVideoStatus(false);
 //                    status.sendVideoStatus(false);
 //                    killUpdateLocationThread();
-                }
-                status.getVideoStatus();
-                System.out.println(videoStatusOn);
+//                }
             }
         });
 
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //if the interpreter has selected to do location services, turn on the settings
-                if(isChecked){
+//                if(isChecked){
                     //update the database here with the locationServices availability,
 //                    startUpdateLocationThread();
 //                    status.sendLocationStatus(true);
-                } else {
+                    status.setLocationStatus(isChecked);
+//                } else {
+//                    status.setLocationStatus(false);
 //                    status.sendLocationStatus(false);
 //                    locationServices = false;
 //                    killUpdateLocationThread();
-                }
-                status.getLocationStatus();
-                System.out.println(locationStatusOn);
+//                }
             }
         });
     }
@@ -120,7 +116,7 @@ public class MenuInterpreter extends AppCompatActivity implements LocationTaskLi
                 ObjectMapper mapper = new ObjectMapper();
                 try{
                     JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/updateUserLocation?userId=1&userLocLat=" +
-                            65 + "&userLocLong=+" + 10), JsonObj.class);
+                            location.getLatitude() + "&userLocLong=+" + location.getLongitude()), JsonObj.class);
                 } catch (Exception e){
                     System.out.println(e);
                 }
@@ -136,17 +132,23 @@ public class MenuInterpreter extends AppCompatActivity implements LocationTaskLi
 
     public void processLocStatus(boolean status){
         locationStatusOn = status;
-        locationSwitch.setChecked(locationStatusOn);
     }
 
     public void processVideoStatus(boolean status){
         videoStatusOn = status;
+    }
+
+    public void setVideoSwitch(boolean status){
         videoSwitch.setChecked(videoStatusOn);
     }
 
-
+    public void setLocationSwitch(boolean status){
+        locationSwitch.setChecked(locationStatusOn);
+    }
 }
 interface LocationTaskListener {
     void processLocStatus(boolean status);
     void processVideoStatus(boolean status);
+    void setVideoSwitch(boolean status);
+    void setLocationSwitch(boolean status);
 }

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -44,22 +45,24 @@ public class InterpreterStatus {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     //call API to update the video status here, if true set true else false
-                    if(vid){
-                        JsonObj obj = mapper.readValue(new URL("http://54.69.18.19:8081/setVideoStatus?userId=+" +
-                                userId + "&status=1"), JsonObj.class);
-                    } else {
-                        JsonObj obj = mapper.readValue(new URL("http://54.69.18.19:8081/setVideoStatus?userId=+" +
-                                userId + "&status=0"), JsonObj.class);
-                    }
+                    URL url = new URL("http://54.69.18.19:8081/setVideoStatus?userId=" +
+                                userId + "&status=" + (vid ? 1 : 0));
+                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                    InputStream inputStream = connection.getInputStream();
+//                        JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/setVideoStatus?userId=" +
+//                                userId + "&status=" + (vid ? 1 : 0)), JsonObj.class);
+//                    connection.disconnect();
                 }catch(Exception e){
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
+
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                callback.processVideoStatus(vid);
             }
         }.execute(videoTrue);
     }
@@ -79,8 +82,8 @@ public class InterpreterStatus {
                 boolean status = false;
                 try {
                     //call API to update the video status here
-                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19:8081/getVideoStatus?userId=" +
-                            userId + "&status=0"), JsonObj[].class);
+                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getVideoStatus?userId=" +
+                            userId), JsonObj[].class);
                     //set status here from object
                     status = obj[0].getOk_to_chat();
                 }catch(Exception e){
@@ -91,9 +94,10 @@ public class InterpreterStatus {
             }
 
             @Override
-            protected void onPostExecute(Boolean bool) {
-                super.onPostExecute(bool);
-                callback.processVideoStatus(bool);
+            protected void onPostExecute(Boolean status) {
+                super.onPostExecute(status);
+                callback.processVideoStatus(status);
+                callback.setVideoSwitch(status);
             }
         }.execute();
     }
@@ -112,14 +116,12 @@ public class InterpreterStatus {
             protected Void doInBackground(Boolean... params) {
                 ObjectMapper mapper = new ObjectMapper();
                 try{
-                    if(loc){
-                        JsonObj obj = mapper.readValue(new URL("http://54.69.18.19:8081/setLocationStatus?userId=+" +
-                                userId + "&status=1"), JsonObj.class);
-                    } else {
-                        JsonObj obj = mapper.readValue(new URL("http://54.69.18.19:8081/setLocationStatus?userId=+" +
-                                userId + "&status=0"), JsonObj.class);
-                    }
-
+//                    JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/setLocationStatus?userId=" +
+//                            userId + "&status=" + (loc ? 1 : 0)), JsonObj.class);
+                    URL url = new URL("http://54.69.18.19/setLocationStatus?userId=" +
+                            userId + "&status=" + (loc ? 1 : 0));
+                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                    InputStream inputStream = connection.getInputStream();
                 } catch (Exception e){
                     System.out.println(e);
                 }
@@ -129,6 +131,7 @@ public class InterpreterStatus {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                callback.processVideoStatus(loc);
             }
         }.execute(locationTrue);
     }
@@ -148,7 +151,7 @@ public class InterpreterStatus {
                 boolean status = false;
                 try {
                     //call API to update the video status here
-                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19:8081/getLocationStatus?userId=" +
+                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getLocationStatus?userId=" +
                             userId), JsonObj[].class);
                     status = obj[0].getOk_to_show_location();
                 } catch (Exception e) {
@@ -161,6 +164,7 @@ public class InterpreterStatus {
             protected void onPostExecute(Boolean status) {
                 super.onPostExecute(status);
                 callback.processLocStatus(status);
+                callback.setLocationSwitch(status);
             }
         }.execute();
     }

@@ -55,11 +55,7 @@ class JsonObj {
     public boolean getOk_to_chat(){return ok_to_chat;}
     public void setOk_to_chat(Object usrVid){
         //data comes out as a linkedHashMap with an arraylist for the arrays
-        if(((LinkedHashMap<String, ArrayList<Integer>>)usrVid).get("data").get(0) == 0){
-            ok_to_chat = false;
-        } else {
-            ok_to_chat = true;
-        }
+        ok_to_chat = ((LinkedHashMap<String, ArrayList<Integer>>)usrVid).get("data").get(0) == 1;
     }
 
     @JsonProperty("ok_to_show_location")
@@ -67,11 +63,7 @@ class JsonObj {
     public boolean getOk_to_show_location(){return ok_to_show_location;}
     public void setOk_to_show_location(Object usrLoc){
         //data comes out as a linkedHashMap with an arraylist for the arrays
-        if(((LinkedHashMap<String, ArrayList<Integer>>)usrLoc).get("data").get(0) == 0){
-            ok_to_show_location = false;
-        } else {
-            ok_to_show_location = true;
-        }
+        ok_to_show_location = ((LinkedHashMap<String, ArrayList<Integer>>)usrLoc).get("data").get(0) == 1;
     }
 
     @JsonProperty("success")
