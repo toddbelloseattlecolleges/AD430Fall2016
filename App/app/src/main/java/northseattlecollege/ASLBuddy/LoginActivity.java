@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "interpreter@example.com:interpreter", "hoh@example.com:hoh"
+            "interpreter@example.com:password", "hoh@example.com:password"
     };
 
     // Variables for user login
