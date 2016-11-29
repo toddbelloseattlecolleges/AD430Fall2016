@@ -53,17 +53,24 @@ class JsonObj {
     @JsonProperty("ok_to_chat")
     private boolean ok_to_chat;
     public boolean getOk_to_chat(){return ok_to_chat;}
-    public void setOk_to_chat(Object usrVid){
+    public void setOk_to_chat(LinkedHashMap<String, ArrayList<Integer>> usrVid){
         //data comes out as a linkedHashMap with an arraylist for the arrays
-        ok_to_chat = ((LinkedHashMap<String, ArrayList<Integer>>)usrVid).get("data").get(0) == 1;
+//        try {
+//            LinkedHashMap<String, ArrayList<Integer>> usrVid1;
+//            if (usrVid instanceof LinkedHashMap<String, ArrayList<Integer>>)
+//                usrVid1 = (LinkedHashMap<String, ArrayList<Integer>>) usrVid;
+            ok_to_chat = usrVid.get("data").get(0) == 1;
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @JsonProperty("ok_to_show_location")
     private boolean ok_to_show_location;
     public boolean getOk_to_show_location(){return ok_to_show_location;}
-    public void setOk_to_show_location(Object usrLoc){
+    public void setOk_to_show_location(LinkedHashMap<String, ArrayList<Integer>> usrLoc){
         //data comes out as a linkedHashMap with an arraylist for the arrays
-        ok_to_show_location = ((LinkedHashMap<String, ArrayList<Integer>>)usrLoc).get("data").get(0) == 1;
+        ok_to_show_location = usrLoc.get("data").get(0) == 1;
     }
 
     @JsonProperty("skype_username")

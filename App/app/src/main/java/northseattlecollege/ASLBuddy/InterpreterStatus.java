@@ -23,12 +23,10 @@ import java.net.URLConnection;
 
 public class InterpreterStatus {
     int userId;
-    LocationTaskListener callback;
-    public InterpreterStatus(int userId, LocationTaskListener callback){
+    public InterpreterStatus(int userId){
         //figuring out who is currently logged in
         //pass in the userid as a parameter of the constructor
         this.userId = userId;
-        this.callback = callback;
     }
 
     //send video status to the server
@@ -63,44 +61,25 @@ public class InterpreterStatus {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                callback.processVideoStatus(vid);
             }
         }.execute(videoTrue);
     }
 
     //method that sets the video
-    public void getVideoStatus(){
-        //call api here
-        new AsyncTask<Void, Void, Boolean>(){
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                ObjectMapper mapper = new ObjectMapper();
-                boolean status = false;
-                try {
-                    //call API to update the video status here
-                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getVideoStatus?userId=" +
-                            userId), JsonObj[].class);
-                    //set status here from object
-                    status = obj[0].getOk_to_chat();
-                }catch(Exception e){
-                    System.out.println(e);
-                }
-                //return the result from the query (video status)
-                return status;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean status) {
-                super.onPostExecute(status);
-                callback.processVideoStatus(status);
-                callback.setVideoSwitch(status);
-            }
-        }.execute();
+    public boolean getVideoStatus(){
+        ObjectMapper mapper = new ObjectMapper();
+        boolean status = false;
+        try {
+            //call API to update the video status here
+            JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getVideoStatus?userId=" +
+                    userId), JsonObj[].class);
+            //set status here from object
+            status = obj[0].getOk_to_chat();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        //return the result from the query (video status)
+        return status;
     }
 
     //method that sends the location status to the server
@@ -132,42 +111,23 @@ public class InterpreterStatus {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                callback.processVideoStatus(loc);
             }
         }.execute(locationTrue);
     }
 
     //method that sets the location status in the activity
-    public void getLocationStatus() {
-        //call api here
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... aVoid) {
-                ObjectMapper mapper = new ObjectMapper();
-                boolean status = false;
-                try {
-                    //call API to update the video status here
-                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getLocationStatus?userId=" +
-                            userId), JsonObj[].class);
-                    status = obj[0].getOk_to_show_location();
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-                return status;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean status) {
-                super.onPostExecute(status);
-                callback.processLocStatus(status);
-                callback.setLocationSwitch(status);
-            }
-        }.execute();
+    public boolean getLocationStatus() {
+        ObjectMapper mapper = new ObjectMapper();
+        boolean status = false;
+        try {
+            //call API to update the video status here
+            JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getLocationStatus?userId=" +
+                    userId), JsonObj[].class);
+            status = obj[0].getOk_to_show_location();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return status;
     }
 
     //method that sends the skype user name to the server
