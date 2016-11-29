@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,18 +23,20 @@ public class MenuInterpreter extends AppCompatActivity {
     private final UpdateSkypeStatus updateSkypeStatus;
     private final UpdateVideoStatus updateVideoSwitch;
     private final UpdateLocationStatus updateLocationSwitch;
+    private final UpdateSykpeName updateSykpeName;
     private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
     public InterpreterStatus status;
     private LocationService locationService;
-    private Location location;
+    public Location location;
     private TextView skypeStatus;
+    private EditText skypeName;
 
     public MenuInterpreter() {
-
         updateSkypeStatus = new UpdateSkypeStatus();
         updateVideoSwitch = new UpdateVideoStatus();
         updateLocationSwitch = new UpdateLocationStatus();
+        updateSykpeName = new UpdateSykpeName();
     }
 
     @Override
@@ -43,14 +47,15 @@ public class MenuInterpreter extends AppCompatActivity {
         updateSkypeStatus.execute();
         updateVideoSwitch.execute();
         updateLocationSwitch.execute();
+        updateSykpeName.execute();
 
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
         skypeStatus = (TextView) findViewById(R.id.skypeStatus);
-
+        skypeName = (EditText)findViewById(R.id.skypeName);
         //getting the status from the database here in the separate class
         status = new InterpreterStatus(1);
-//        locationService = new LocationService(this);
+        locationService = new LocationService(this);
     }
 
     @Override
@@ -61,9 +66,8 @@ public class MenuInterpreter extends AppCompatActivity {
     }
 
     public void SetLocation(Location location) {
-//        this.location = location;
+        this.location = location;
 //        System.out.println(this.location.getLatitude() + " " + this.location.getLongitude());
-
     }
 
     private class UpdateSkypeStatus extends AsyncTask<Void, Void, Boolean> {
@@ -102,6 +106,14 @@ public class MenuInterpreter extends AppCompatActivity {
 
         protected void onPostExecute(Boolean status) {
             locationSwitch.setChecked(status);
+        }
+    }
+
+    private class UpdateSykpeName extends AsyncTask<Void, Void, String>{
+        @Override
+        protected String doInBackground(Void... params) { return status.getSkypeName(); }
+        protected void onPostExecute(String s) {
+            skypeName.setText(s);
         }
     }
 }

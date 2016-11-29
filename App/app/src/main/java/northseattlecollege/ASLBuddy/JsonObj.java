@@ -58,9 +58,8 @@ class JsonObj {
     @JsonProperty("ok_to_show_location")
     private boolean ok_to_show_location;
     public boolean getOk_to_show_location(){return ok_to_show_location;}
-    public void setOk_to_show_location(LinkedHashMap<String, ArrayList<Integer>> usrLoc){
-        //data comes out as a linkedHashMap with an arraylist for the arrays
-        ok_to_show_location = usrLoc.get("data").get(0) == 1;
+    public void setOk_to_show_location(boolean usrLoc){
+        ok_to_show_location = usrLoc;
     }
 
     @JsonProperty("skype_username")

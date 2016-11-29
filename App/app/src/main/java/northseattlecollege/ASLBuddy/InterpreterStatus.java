@@ -121,9 +121,9 @@ public class InterpreterStatus {
         boolean status = false;
         try {
             //call API to update the video status here
-            JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getLocationStatus?userId=" +
-                    userId), JsonObj[].class);
-            status = obj[0].getOk_to_show_location();
+            JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/getLocationStatus?userId=" +
+                    userId), JsonObj.class);
+            status = obj.getOk_to_show_location();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -131,19 +131,19 @@ public class InterpreterStatus {
     }
 
     //method that sends the skype user name to the server
-    public void setSkypeName(final String skypeName){
+    public void setSkypeName(String skypeName){
         //call api here
 
 
 
 
-                try{
-                    URL url = new URL("http://54.69.18.19/setSkypeName?userId=1&skypeName="+ skypeName);
-                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                    InputStream inputStream = connection.getInputStream();
-                } catch (Exception e){
-                    System.out.println(e);
-                }
+        try{
+            URL url = new URL("http://54.69.18.19/setSkypeName?userId=1&skypeName="+ skypeName);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+        } catch (Exception e){
+            System.out.println(e);
+        }
 
 
 
@@ -155,17 +155,17 @@ public class InterpreterStatus {
         //call api here
 
 
-                ObjectMapper mapper = new ObjectMapper();
-                String name = "";
-                try {
-                    //call API to update the video status here
-                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getSkypeName?userId=" +
-                            userId), JsonObj[].class);
-                    name = obj[0].getSkype_user_name();
+        ObjectMapper mapper = new ObjectMapper();
+        String name = "";
+        try {
+            //call API to update the video status here
+            JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getSkypeName?userId=" +
+                    userId), JsonObj[].class);
+            name = obj[0].getSkype_user_name();
 
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return name;
 
 
