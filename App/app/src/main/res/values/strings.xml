@@ -123,4 +123,6 @@
     <string name="label_cancel">Cancel</string>
     <string name="label_install_skype">Install Skype</string>
     <string name="label_skype_check">You must have Skype Installed to use this feature</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDdpX-ncWDYGfZkGauZi0-_TgFv1V8w8ww</string>
 </resources>
+
