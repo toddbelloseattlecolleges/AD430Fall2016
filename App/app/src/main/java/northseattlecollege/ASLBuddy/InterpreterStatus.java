@@ -3,6 +3,7 @@ package northseattlecollege.ASLBuddy;
 import android.os.AsyncTask;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.std.StdArraySerializers;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -167,6 +168,49 @@ public class InterpreterStatus {
                 callback.setLocationSwitch(status);
             }
         }.execute();
+    }
+
+    //method that sends the skype user name to the server
+    public void setSkypeName(final String skypeName){
+        //call api here
+
+
+
+
+                try{
+                    URL url = new URL("http://54.69.18.19/setSkypeName?userId=1&skypeName="+ skypeName);
+                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                    InputStream inputStream = connection.getInputStream();
+                } catch (Exception e){
+                    System.out.println(e);
+                }
+
+
+
+
+    }
+
+    //method that sets the Skype user name
+    public String getSkypeName() {
+        //call api here
+
+
+                ObjectMapper mapper = new ObjectMapper();
+                String name = "";
+                try {
+                    //call API to update the video status here
+                    JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getSkypeName?userId=" +
+                            userId), JsonObj[].class);
+                    name = obj[0].getSkype_user_name();
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+        return name;
+
+
+
+
     }
 }
 

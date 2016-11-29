@@ -66,6 +66,12 @@ class JsonObj {
         ok_to_show_location = ((LinkedHashMap<String, ArrayList<Integer>>)usrLoc).get("data").get(0) == 1;
     }
 
+    @JsonProperty("skype_username")
+    private String skype_username;
+    public String getSkype_user_name(){return skype_username;}
+    public void setSkype_user_name(String usrIn){skype_username = usrIn;}
+
+
     @JsonProperty("success")
     private String success;
     public String getSuccess(){return success;}
