@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
+            "interpreter@example.com:interpreter", "hoh@example.com:hoh"
     };
 
     // Variables for user login
@@ -102,9 +103,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Set up the login form.
         existingEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
         newEmailView = (AutoCompleteTextView) findViewById(R.id.create_email);
-        populateAutoComplete();
+        populateAutoCompletes();
         existingPasswordView = (EditText) findViewById(R.id.password);
         newPasswordView = (EditText) findViewById(R.id.create_password);
         existingPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -139,54 +139,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-    }
 
-    /**
-     * Populates emails in the email input
-     */
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    /**
-     * Checks to see if this application can request contacts
-     */
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(existingEmailView, R.string.permission_rationale,
-                    Snackbar.LENGTH_INDEFINITE).setAction(android.R.string.ok, new View.OnClickListener() {
-                    @Override
-                    @TargetApi(Build.VERSION_CODES.M)
-                    public void onClick(View v) {
-                        requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                    }
-                });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
+        // Hide keyboard that by default comes up automatically
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
@@ -332,6 +288,54 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
+     * Populates emails in the email inputs
+     */
+    private void populateAutoCompletes() {
+        if (!mayRequestContacts()) {
+            return;
+        }
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    /**
+     * Checks to see if this application can request contacts
+     */
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(existingEmailView, R.string.permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE).setAction(android.R.string.ok, new View.OnClickListener() {
+                @Override
+                @TargetApi(Build.VERSION_CODES.M)
+                public void onClick(View v) {
+                    requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                }
+            });
+        } else {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoCompletes();
+            }
+        }
+    }
+
+    /**
      * Handler method for populating email input with emails read from
      * the Android device, and prefers primary email.
      */
@@ -447,7 +451,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         e.printStackTrace();
                     }
                 } else {
-                    // validate password on the client side
+                    // validate password on the client side, set userID and user type
                     try {
                         JSONObject responseJSON = new JSONObject(response);
                         String hashFromDB = responseJSON.getString("hashed_password");
@@ -456,12 +460,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 hashFromDB);
                         if (isMatch) {
                             successfulUserID = responseJSON.getString("user_id");
+                            isInterpreter = responseJSON.getBoolean("is_interpreter");
                             return true;
                         } else {
-                            return false;
+                            return runDummyCredentials();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        return runDummyCredentials();
                     }
                 }
             }
@@ -486,11 +492,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             } else {
                 if (isNewUser) {
-                    newPasswordView.setError(getString(R.string.error_incorrect_password));
-                    newPasswordView.requestFocus();
+                    newEmailView.setError(getString(R.string.error_failed_login));
+                    newEmailView.requestFocus();
                 } else {
-                    existingPasswordView.setError(getString(R.string.error_incorrect_password));
-                    existingPasswordView.requestFocus();
+                    existingEmailView.setError(getString(R.string.error_failed_login));
+                    existingEmailView.requestFocus();
                 }
             }
         }
@@ -500,8 +506,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+
+        /**
+         * Runs the dummy credentials if server login fails for any reason
+         */
+        public boolean runDummyCredentials() {
+            for (String credential : DUMMY_CREDENTIALS) {
+                String[] pieces = credential.split(":");
+                if (pieces[0].equals(mEmail)) {
+                    // Account exists, return true if the password matches.
+                    if (pieces[1].equals(mPassword)) {
+
+                        // for debugging, if email is foo@example.com we login as interpreter
+                        isInterpreter = mEmail.equals("interpreter@example.com");
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
+    /**
+     * Queries the Server API using different paths depending on login/signup
+     * and returns the response JSON as a String
+     * @param isNewUser
+     * @param email
+     * @param pass
+     * @return
+     * @throws IOException
+     */
     private String loginHTTP(boolean isNewUser, String email, String pass) throws IOException {
         InputStream is = null;
         int length = 1000;
@@ -542,6 +576,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Converts the HTTP Response JSON into a String and returns that String
+     * @param stream
+     * @param length
+     * @return
+     * @throws IOException
+     * @throws UnsupportedEncodingException
+     */
     public String convertInputStreamToString(InputStream stream, int length) throws IOException,
             UnsupportedEncodingException {
         Reader reader = null;
