@@ -71,10 +71,10 @@ public class InterpreterStatus {
         boolean status = false;
         try {
             //call API to update the video status here
-            JsonObj[] obj = mapper.readValue(new URL("http://54.69.18.19/getVideoStatus?userId=" +
-                    userId), JsonObj[].class);
+            JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/getVideoStatus?userId=" +
+                    userId), JsonObj.class);
             //set status here from object
-            status = obj[0].getOk_to_chat();
+            status = obj.getOk_to_chat();
         }catch(Exception e){
             System.out.println(e);
         }

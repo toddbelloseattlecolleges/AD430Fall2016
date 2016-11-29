@@ -53,17 +53,7 @@ class JsonObj {
     @JsonProperty("ok_to_chat")
     private boolean ok_to_chat;
     public boolean getOk_to_chat(){return ok_to_chat;}
-    public void setOk_to_chat(LinkedHashMap<String, ArrayList<Integer>> usrVid){
-        //data comes out as a linkedHashMap with an arraylist for the arrays
-//        try {
-//            LinkedHashMap<String, ArrayList<Integer>> usrVid1;
-//            if (usrVid instanceof LinkedHashMap<String, ArrayList<Integer>>)
-//                usrVid1 = (LinkedHashMap<String, ArrayList<Integer>>) usrVid;
-            ok_to_chat = usrVid.get("data").get(0) == 1;
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-    }
+    public void setOk_to_chat(boolean usrVid){ok_to_chat = usrVid; }
 
     @JsonProperty("ok_to_show_location")
     private boolean ok_to_show_location;
