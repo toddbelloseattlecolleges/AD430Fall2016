@@ -38,6 +38,9 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class Settings extends AppCompatPreferenceActivity {
+
+    private Object fromClass = null;
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -123,7 +126,13 @@ public class Settings extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fromClass = getIntent().getSerializableExtra("fromClass");
         setupActionBar();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 
     /**

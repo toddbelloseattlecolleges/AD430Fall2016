@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,17 +72,6 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
         setContentView(R.layout.activity_hearing_tool);
         createScrollView();
 
-        // Back button for easy navigation
-        Button backButton = (Button) findViewById(R.id.back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent navigationIntent = new Intent(HearingTool.this, MenuHOH.class);
-                HearingTool.this.startActivity(navigationIntent);
-            }
-        });
-
         // instantiate the sent messages list
         sentMessages = new ArrayList<>();
 
@@ -101,6 +91,45 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
 
         typeButton = (Button) findViewById(R.id.type_button);
         typeButton.setOnClickListener(onTypeClick());
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent navigationIntent = new Intent(HearingTool.this, MenuHOH.class);
+        HearingTool.this.startActivity(navigationIntent);
+    }
+
+    /**
+     * Method for inflating settings button into options menu
+     * @param menu
+     * @return wasSuccessful
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar, menu);
+        return true;
+    }
+
+    /**
+     * Handler for selecting settings button, will come back to this
+     * activity after settings activity (using native back button)
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle menu item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent navigationIntent = new Intent(HearingTool.this, Settings.class);
+                HearingTool.this.startActivity(navigationIntent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -298,19 +327,6 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
             params.gravity = Gravity.BOTTOM;
         }
         return params;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.menu_voice_chat, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here.
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

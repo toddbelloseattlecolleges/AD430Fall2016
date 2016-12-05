@@ -123,6 +123,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         SignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                isNewUser = false;
                 attemptLogin();
             }
         });

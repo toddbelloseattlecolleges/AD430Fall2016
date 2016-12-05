@@ -21,14 +21,4 @@
         android:baselineAlignBottom="false"
         android:contentDescription="Voice talk button"/>
 
-    <Button
-        android:text="Back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_alignRight="@+id/label_hearing_tool"
-        android:layout_alignEnd="@+id/label_hearing_tool"
-        android:layout_marginBottom="15dp"
-        android:id="@+id/back" />
-
 </android.support.design.widget.CoordinatorLayout>
