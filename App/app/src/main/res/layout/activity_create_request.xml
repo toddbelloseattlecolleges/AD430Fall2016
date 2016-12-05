@@ -11,152 +11,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="northseattlecollege.ASLBuddy.CreateRequest">
 
-    <TextView
-        android:id="@+id/label_create_request"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="8dp"
-        android:textSize="34sp" />
-
     <LinearLayout
-        android:id="@+id/layout_create_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/label_create_request"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/label_request_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:text="@string/label_request_type" />
-
-                <Spinner
-                    android:id="@+id/spinner_request_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:dropDownWidth="match_parent"
-                    android:entries="@array/request_types"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/label_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:paddingBottom="8dp"
-                    android:text="@string/label_description" />
-
-                <EditText
-                    android:id="@+id/edit_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:enabled="false"
-                    android:inputType="text" />
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/label_details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:text="@string/label_details" />
-
-            <EditText
-                android:id="@+id/edit_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:maxLines="5"
-                android:minLines="3"
-                android:scrollbars="vertical" />
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/set_radius_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
-
-            <Button
-                android:id="@+id/button_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_back" />
-
-            <Button
-                android:id="@+id/button_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_submit" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_install_skype"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/label_create_request"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/label_create_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:paddingBottom="8dp"
-            android:text="@string/label_skype_check"
-            android:textSize="24sp" />
+            android:textSize="34sp" />
 
-        <Button
-            android:id="@+id/button_install_skype"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/create_request_fragment_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/label_install_skype" />
+            android:layout_below="@id/label_create_request"
+            android:paddingBottom="8dp" />
 
         <Button
             android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="75dp"
             android:layout_gravity="center"
-            android:text="@string/label_cancel" />
+            android:text="@string/label_cancel"
+            android:textStyle="bold" />
     </LinearLayout>
+
 </RelativeLayout>

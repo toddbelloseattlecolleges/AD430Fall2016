@@ -1,4 +1,4 @@
-package northseattlecollege.ASLBuddy;
+package northseattlecollege.ASLBuddy.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import northseattlecollege.ASLBuddy.R;
 
 
 /**
@@ -20,16 +22,16 @@ import android.widget.TextView;
  */
 public class SetRadiusFragment extends Fragment {
 
-    public static final String ARG_RADIUS = "radius";
+    public static final String ARG_RADIUS = "mRadius";
 
-    private SeekBar radiusValue;
-    private TextView radiusDisplay;
-    private float radius;
+    private SeekBar mRadiusValue;
+    private TextView mRadiusDisplay;
+    private float mRadius;
 
     private OnSetRadiusFragmentInteractionListener mListener;
 
     public float getRadius() {
-        return radius;
+        return mRadius;
     }
 
     public SetRadiusFragment() {
@@ -55,7 +57,7 @@ public class SetRadiusFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            radius = getArguments().getFloat(ARG_RADIUS);
+            mRadius = getArguments().getFloat(ARG_RADIUS);
         }
     }
 
@@ -65,17 +67,17 @@ public class SetRadiusFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_set_radius, container, false);
 
-        radiusDisplay = (TextView)view.findViewById(R.id.text_radius_display);
-        radiusDisplay.setText(String.valueOf(radius) + " miles");
+        mRadiusDisplay = (TextView)view.findViewById(R.id.text_radius_display);
+        mRadiusDisplay.setText(String.valueOf(mRadius) + " miles");
 
-        radiusValue = (SeekBar)view.findViewById(R.id.seek_bar_radius_value);
-        radiusValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mRadiusValue = (SeekBar)view.findViewById(R.id.seek_bar_radius_value);
+        mRadiusValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                radius = (progress / 4.0f) + 0.25f;
-                radiusDisplay.setText(String.valueOf(radius) + " miles");
+                mRadius = (progress / 4.0f) + 0.25f;
+                mRadiusDisplay.setText(String.valueOf(mRadius) + " miles");
                 if(mListener != null) {
-                    mListener.onFragmentInteraction(radius);
+                    mListener.onSetRadiusFragmentInteraction(mRadius);
                 }
             }
 
@@ -120,6 +122,6 @@ public class SetRadiusFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnSetRadiusFragmentInteractionListener {
-        void onFragmentInteraction(float radius);
+        void onSetRadiusFragmentInteraction(float radius);
     }
 }

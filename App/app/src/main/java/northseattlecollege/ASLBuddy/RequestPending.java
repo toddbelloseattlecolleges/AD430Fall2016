@@ -41,69 +41,78 @@ public class RequestPending extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requests_pending);
 
-        userArray = null;
-        position = 0;
+        Intent intent = getIntent();
+        String requestType = intent.getStringExtra(CreateRequest.REQUEST_TYPE);
+
+        if(requestType.compareTo(CreateRequest.REQUEST_TYPE_VIDEO) == 0) {
+            userArray = null;
+            position = 0;
 
 
-        final TextView response = (TextView)findViewById(R.id.label_request_pending);
-        Button call = (Button)findViewById(R.id.label_finish_request);
-        final Button skip = (Button)findViewById(R.id.label_skip_user);
-        //can't skip until there are users in the array
-        skip.setClickable(false);
+            final TextView response = (TextView) findViewById(R.id.label_request_pending);
+            Button call = (Button) findViewById(R.id.label_finish_request);
+            final Button skip = (Button) findViewById(R.id.label_skip_user);
+            //can't skip until there are users in the array
+            skip.setClickable(false);
 
-        // ToDo: remove back button once system back button is working
-        // Back button for easy navigation
-        Button backButton = (Button) findViewById(R.id.button_back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent navigationIntent = new Intent(RequestPending.this, MenuHOH.class);
-                RequestPending.this.startActivity(navigationIntent);
-            }
-        });
-
-        //TODO: Make this button set current user ok_to_chat to false before switching to the new user
-        skip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //make sure we haven't reached the end of available users
-
-                if(position < userArray.length())
-                {
-                    position++;
-                    try{
-                    JSONObject skypeName = userArray.getJSONObject(position);
-                    response.setText(skypeName.get("skype_username").toString());
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                        System.out.println("Invalid Data from Server");
-                        skip.setClickable(false);
-                    }
-                }else{
-                    //get a new list of users
-                    skip.setClickable(false);
+            // ToDo: remove back button once system back button is working
+            // Back button for easy navigation
+            Button backButton = (Button) findViewById(R.id.button_back);
+            backButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     finish();
-                    startActivity(getIntent());
+                    Intent navigationIntent = new Intent(RequestPending.this, MenuHOH.class);
+                    RequestPending.this.startActivity(navigationIntent);
                 }
+            });
 
-            }
-        });
+            //TODO: Make this button set current user ok_to_chat to false before switching to the new user
+            skip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //make sure we haven't reached the end of available users
+
+                    if (position < userArray.length()) {
+                        position++;
+                        try {
+                            JSONObject skypeName = userArray.getJSONObject(position);
+                            response.setText(skypeName.get("skype_username").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            System.out.println("Invalid Data from Server");
+                            skip.setClickable(false);
+                        }
+                    } else {
+                        //get a new list of users
+                        skip.setClickable(false);
+                        finish();
+                        startActivity(getIntent());
+                    }
+
+                }
+            });
 
 
-        call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //initiate a call by grabbing the username from the TextView after it is updated
-                //this should only be available once the AsyncTask has completed and made the button visible
-                SkypeResources.initiateSkypeCall(getApplicationContext(),response.getText().toString());
+            call.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //initiate a call by grabbing the username from the TextView after it is updated
+                    //this should only be available once the AsyncTask has completed and made the button visible
+                    SkypeResources.initiateSkypeCall(getApplicationContext(), response.getText().toString());
 
-            }
-        });
-        //create a new request to contact the server and get the username of the interpreter
+                }
+            });
+            //create a new request to contact the server and get the username of the interpreter
 
-        ServerRequestTask usernameGet = new ServerRequestTask("http://54.69.18.19/getVideoInterpreters?userId=1");
-
+            ServerRequestTask usernameGet = new ServerRequestTask("http://54.69.18.19/getVideoInterpreters?userId=1");
+        } else {
+            CreateRequest.setError(true);
+            finish();
+            Intent navigationIntent = new Intent(this, CreateRequest.class);
+            navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, requestType);
+            startActivity(navigationIntent);
+        }
     }
 
     //need to define internet permission

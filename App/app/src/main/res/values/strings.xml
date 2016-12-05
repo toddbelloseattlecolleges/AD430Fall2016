@@ -105,7 +105,7 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
 
-    <string-array name="request_types">
+    <string-array name="request_purposes">
         <item>Medical</item>
         <item>Educational</item>
         <item>Confidential</item>
@@ -113,7 +113,7 @@
     </string-array>
 
     <string name="label_set_radius">Radius</string>
-    <string name="label_request_type">Request Type</string>
+    <string name="label_request_purpose">Request Purpose</string>
     <string name="label_description">*if other, enter description here.</string>
     <string name="label_details">Details</string>
     <string name="label_back">Back</string>
@@ -123,4 +123,9 @@
     <string name="label_cancel">Cancel</string>
     <string name="label_install_skype">Install Skype</string>
     <string name="label_skype_check">You must have Skype Installed to use this feature</string>
+    <string name="label_increase_range">Increase Range</string>
+    <string name="label_request_error">There are no interpreters within range. Please choose a following action</string>
+    <string name="label_continue">continue</string>
+    <string name="dialog_redirect_message">You are about to leave ASL Buddy and open the Google Play Store</string>
+    <string name="dialog_title_warning">WARNING!</string>
 </resources>
