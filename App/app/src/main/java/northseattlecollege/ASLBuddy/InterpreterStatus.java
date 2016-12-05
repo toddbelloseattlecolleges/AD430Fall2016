@@ -41,7 +41,6 @@ public class InterpreterStatus {
 
             @Override
             protected Void doInBackground(Boolean... params) {
-                ObjectMapper mapper = new ObjectMapper();
                 try {
                     //call API to update the video status here, if true set true else false
                     URL url = new URL("http://54.69.18.19:8081/setVideoStatus?userId=" +
@@ -54,7 +53,6 @@ public class InterpreterStatus {
                 }catch(Exception e){
                     e.printStackTrace();
                 }
-
                 return null;
             }
 
@@ -107,7 +105,6 @@ public class InterpreterStatus {
                 }
                 return null;
             }
-
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
@@ -171,6 +168,18 @@ public class InterpreterStatus {
 
 
 
+    }
+
+    public void setInterpreterLocation(double lat, double lng){
+        try {
+            //call API to update the video status here, if true set true else false
+            URL url = new URL("http://54.69.18.19/updateUserLocation?userId=" + userId + "&userLocLat=" +
+                    lat + "&userLocLong=+" + lng);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
 

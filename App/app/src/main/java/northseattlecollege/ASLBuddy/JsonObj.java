@@ -3,10 +3,6 @@ package northseattlecollege.ASLBuddy;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 class JsonObj {
 
@@ -58,9 +54,7 @@ class JsonObj {
     @JsonProperty("ok_to_show_location")
     private boolean ok_to_show_location;
     public boolean getOk_to_show_location(){return ok_to_show_location;}
-    public void setOk_to_show_location(boolean usrLoc){
-        ok_to_show_location = usrLoc;
-    }
+    public void setOk_to_show_location(boolean usrLoc){ ok_to_show_location = usrLoc; }
 
     @JsonProperty("skype_username")
     private String skype_username;
