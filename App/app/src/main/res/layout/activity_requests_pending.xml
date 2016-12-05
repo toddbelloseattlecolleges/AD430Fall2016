@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:visibility="invisible"
         android:id="@+id/label_interpreter_found" />
     <TextView
         android:text="Finding Interpreter"
@@ -23,6 +24,7 @@
         android:layout_below="@id/label_interpreter_found"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:visibility="invisible"
         android:id="@+id/label_request_pending" />
 
 
@@ -39,6 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/label_skip_user"
+        android:visibility="invisible"
         android:layout_below="@id/label_finish_request"
        />
 

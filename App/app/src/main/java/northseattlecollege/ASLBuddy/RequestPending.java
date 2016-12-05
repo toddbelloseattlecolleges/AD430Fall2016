@@ -23,6 +23,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static northseattlecollege.ASLBuddy.CreateRequest.REQUEST_TYPE;
+
 /**
  * Author: Brandon Lorenz
  * Created 10/10/2016
@@ -33,7 +35,9 @@ public class RequestPending extends AppCompatActivity {
     //initialize useful variables for holding and iterating through available interpreters
     JSONArray userArray;
     int position;
-
+    public final static String REQUEST_TYPE = "northseattlecollege.ASLBuddy.REQUEST_TYPE";
+    public final static String REQUEST_TYPE_VIDEO = "northseattlecollege.ASLBuddy.REQUEST_TYPE_VIDEO";
+    public final static String REQUEST_TYPE_PHYSICAL = "northseattlecollege.ASLBuddy.REQUEST_TYPE_PHYSICAL";
 
 
     @Override
@@ -44,12 +48,6 @@ public class RequestPending extends AppCompatActivity {
         userArray = null;
         position = 0;
 
-
-        final TextView response = (TextView)findViewById(R.id.label_request_pending);
-        Button call = (Button)findViewById(R.id.label_finish_request);
-        final Button skip = (Button)findViewById(R.id.label_skip_user);
-        //can't skip until there are users in the array
-        skip.setClickable(false);
 
         // ToDo: remove back button once system back button is working
         // Back button for easy navigation
@@ -63,24 +61,59 @@ public class RequestPending extends AppCompatActivity {
             }
         });
 
+
+        Intent intent = getIntent();
+        final String requestType = intent.getStringExtra(REQUEST_TYPE);
+        //when the page is created, check if it is a pending physical or video request and
+        //initialize the appropriate UI
+        if (requestType.compareTo(REQUEST_TYPE_VIDEO) == 0){
+            setupVideoRequest();
+
+     }
+        else if(requestType.compareTo(REQUEST_TYPE_PHYSICAL)==0){
+            System.out.println("This is a physical request");
+        }
+
+    }
+
+    //call this method to set up UI for pending video request
+    private void setupVideoRequest(){
+
+        //set up the UI
+        final TextView response = (TextView) findViewById(R.id.label_request_pending);
+        Button call = (Button) findViewById(R.id.label_finish_request);
+        final Button skip = (Button) findViewById(R.id.label_skip_user);
+        TextView interpreterFound = (TextView)findViewById(R.id.label_interpreter_found);
+        //make buttons visible
+
+
+
+
+
+
+
+        //can't skip until there are users in the array
+        skip.setClickable(false);
+
+
+
         //TODO: Make this button set current user ok_to_chat to false before switching to the new user
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //make sure we haven't reached the end of available users
 
-                if(position < userArray.length())
-                {
+                if (position < userArray.length()) {
                     position++;
-                    try{
-                    JSONObject skypeName = userArray.getJSONObject(position);
-                    response.setText(skypeName.get("skype_username").toString());
-                    }catch (JSONException e) {
+                    try {
+                        JSONObject skypeName = userArray.getJSONObject(position);
+                        response.setText(skypeName.get("skype_username").toString());
+                    } catch (JSONException e) {
                         e.printStackTrace();
                         System.out.println("Invalid Data from Server");
                         skip.setClickable(false);
                     }
-                }else{
+                } else {
                     //get a new list of users
                     skip.setClickable(false);
                     finish();
@@ -96,7 +129,7 @@ public class RequestPending extends AppCompatActivity {
             public void onClick(View v) {
                 //initiate a call by grabbing the username from the TextView after it is updated
                 //this should only be available once the AsyncTask has completed and made the button visible
-                SkypeResources.initiateSkypeCall(getApplicationContext(),response.getText().toString());
+                SkypeResources.initiateSkypeCall(getApplicationContext(), response.getText().toString());
 
             }
         });
@@ -104,7 +137,13 @@ public class RequestPending extends AppCompatActivity {
 
         ServerRequestTask usernameGet = new ServerRequestTask("http://54.69.18.19/getVideoInterpreters?userId=1");
 
+
     }
+
+    private void setupPhysicalRequest(){
+
+    }
+
 
     //need to define internet permission
     //user need to know that my application can use permission
@@ -201,9 +240,12 @@ public class RequestPending extends AppCompatActivity {
             Button call = (Button)findViewById(R.id.label_finish_request);
             call.setVisibility(View.VISIBLE);
             Button skip = (Button)findViewById(R.id.label_skip_user);
+            skip.setVisibility(View.VISIBLE);
             if(userArray.length() >0 ) {
                 skip.setClickable(true);
             }
+            intFound.setVisibility(View.VISIBLE);
+            response.setVisibility(View.VISIBLE);
 
 
         }
