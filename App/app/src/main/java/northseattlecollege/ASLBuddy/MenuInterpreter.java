@@ -29,7 +29,6 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
     public InterpreterStatus status;
-    private LocationService locationService;
     public Location location;
     private TextView skypeStatus;
     private EditText skypeName;
@@ -62,9 +61,10 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
 
         //getting the status from the database here in the separate class
         status = new InterpreterStatus(1);
-        locationService = new LocationService(this);
         //setting to false for debugging purposes
         updateLocationThread = new UpdateLocationThread(false, this);
+        updateLocationThread.start();
+
     }
 
     private AsyncTask<Void, Void, Void> updateLocationStatusAsync(final boolean isChecked) {
@@ -97,7 +97,7 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         this.location = location;
     }
 
-    public void SendLocationToServer(){
+    public void sendLocationToServer(){
         updateInterpreterLocation.execute();
     }
 
@@ -151,8 +151,11 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
 
         protected void onPostExecute(Boolean status) {
             locationSwitch.setChecked(status);
+            if(updateLocationThread.isAlive()){
+                //kills thread
+                updateLocationThread.kill();
+            }
             updateLocationThread.setLocationStatusOn(status);
-            updateLocationThread.start();
         }
     }
 
