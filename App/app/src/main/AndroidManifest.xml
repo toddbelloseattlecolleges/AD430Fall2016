@@ -25,7 +25,8 @@
         <activity android:name=".MenuHOH" />
         <activity android:name=".MenuInterpreter" />
         <activity android:name=".HearingTool" />
-        <activity android:name=".CreateRequest" />
+        <activity android:name=".CreateRequest"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".RequestPending" />
         <activity
             android:name=".Settings"
