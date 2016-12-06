@@ -35,11 +35,11 @@
 - [x] Has subject drop down: Medical, Educational, Confidential, et cetera
 - [x] Has detail text to put more info about the request (150 char max)
 - [x] Has a request now button
-- [ ] Error state fragment in case there are no interpreters found
-- [ ] On the error state fragment there are three buttons: Change Range (if video), Try Video Chat (if location), and try Hearing Tool
-- [ ] Clicking on the Change range button goes to Create Request view for physical with the range text box selected
-- [ ] Clicking on the Video button takes the user to Create Request view for video
-- [ ] Clicking on the Hearing Tool button takes the user to the Hearing Tool chat page
+- [x] Error state fragment in case there are no interpreters found
+- [x] On the error state fragment there are three buttons: Change Range (if video), Try Video Chat (if location), and try Hearing Tool
+- [x] Clicking on the Change range button goes to Create Request view for physical with the range text box selected
+- [x] Clicking on the Video button takes the user to Create Request view for video
+- [x] Clicking on the Hearing Tool button takes the user to the Hearing Tool chat page
 - [ ] Success state fragment that indicates an interpreter is on the way.
 ~~- [ ] Skype status is displayed, whether or not this interpreter has linked their Skype account with their ASL buddy account.~~
 

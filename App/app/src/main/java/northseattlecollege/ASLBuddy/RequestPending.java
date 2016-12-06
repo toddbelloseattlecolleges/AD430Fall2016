@@ -69,9 +69,14 @@ public class RequestPending extends AppCompatActivity {
         if (requestType.compareTo(REQUEST_TYPE_VIDEO) == 0){
             setupVideoRequest();
 
-     }
+        }
         else if(requestType.compareTo(REQUEST_TYPE_PHYSICAL)==0){
             System.out.println("This is a physical request");
+            CreateRequest.setError(true);
+            finish();
+            Intent navigationIntent = new Intent(this, CreateRequest.class);
+            navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, requestType);
+            startActivity(navigationIntent);
         }
 
     }
@@ -147,7 +152,7 @@ public class RequestPending extends AppCompatActivity {
 
     //need to define internet permission
     //user need to know that my application can use permission
-     class ServerRequestTask extends AsyncTask<String, String, String> {
+    class ServerRequestTask extends AsyncTask<String, String, String> {
 
 
         //this should allow us to use this generic AsyncTask in multiple activities
@@ -251,5 +256,4 @@ public class RequestPending extends AppCompatActivity {
         }
     }
 }
-
 
