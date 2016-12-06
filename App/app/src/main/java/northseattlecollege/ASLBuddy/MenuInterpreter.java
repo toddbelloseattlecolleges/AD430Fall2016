@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -71,6 +72,14 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         updateLocationThread = new UpdateLocationThread(false, this);
         updateLocationThread.start();
 
+        //setting the logout button handler
+        Button logoutButton = (Button) findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
     }
 
     private AsyncTask<Void, Void, Void> updateLocationStatusAsync(final boolean isChecked) {
@@ -94,9 +103,7 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
 
     @Override
     public void onBackPressed() {
-        finish();
-        Intent navigationIntent = new Intent(MenuInterpreter.this, LoginActivity.class);
-        MenuInterpreter.this.startActivity(navigationIntent);
+        // do nothing, we want users to use the logout button
     }
 
     public void SetLocation(Location location) {
@@ -144,6 +151,8 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent navigationIntent = new Intent(MenuInterpreter.this, Settings.class);
+                // pass userId to the following activity
+                navigationIntent.putExtra("userId", userId);
                 MenuInterpreter.this.startActivity(navigationIntent);
                 return true;
 
@@ -162,6 +171,16 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         userId = savedInstanceState.getInt("userId");
+    }
+
+    /**
+     * Terminates this user's session and returns to the login/signup page,
+     * starts activity LoginActivity.java using Android Intent.
+     */
+    private void logout() {
+        finish();
+        Intent navigationIntent = new Intent(MenuInterpreter.this, LoginActivity.class);
+        MenuInterpreter.this.startActivity(navigationIntent);
     }
 
     private class RefreshSkypeStatus extends AsyncTask<Void, Void, Boolean> {

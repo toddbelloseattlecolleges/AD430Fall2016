@@ -39,6 +39,9 @@ import java.util.Locale;
 
 public class HearingTool extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
+    // Logged in userId
+    private int userId;
+
     // layout reference
     private LinearLayout layout;
 
@@ -51,6 +54,7 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
 
     // TextView references for all sent messages
     private List<TextView> sentMessages;
+    private ArrayList<String> sentStringMessages;
 
     // Other conversation logic variables stored here
     private String currentMessage;
@@ -71,9 +75,7 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hearing_tool);
         createScrollView();
-
-        // instantiate the sent messages list
-        sentMessages = new ArrayList<>();
+        userId = getIntent().getIntExtra("userId", userId);
 
         // instantiate text to speech
         Intent checkTTSIntent = new Intent();
@@ -88,9 +90,38 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
                 promptSpeechInput();
             }
         });
-
         typeButton = (Button) findViewById(R.id.type_button);
         typeButton.setOnClickListener(onTypeClick());
+
+        // instantiate the sent messages lists
+        sentMessages = new ArrayList<>();
+        if (sentStringMessages == null) {
+            sentStringMessages = new ArrayList<String>();
+        } else {
+            // if messages loaded from saved instance state
+            boolean isOther = false;
+            for (int i = 0; i < sentStringMessages.size(); i++) {
+                final TextView curMessage = createNewTextView(sentStringMessages.get(i), isOther);
+                layout.addView(curMessage);
+                curMessage.startAnimation(AnimationUtils.loadAnimation(HearingTool.this,
+                        android.R.anim.slide_in_left));
+                isOther = !isOther;
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("userId", userId);
+        savedInstanceState.putStringArrayList("messages", sentStringMessages);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        userId = savedInstanceState.getInt("userId");
+        sentStringMessages = savedInstanceState.getStringArrayList("messages");
     }
 
     @Override
@@ -124,6 +155,8 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent navigationIntent = new Intent(HearingTool.this, Settings.class);
+                // pass userId to the following activity
+                navigationIntent.putExtra("userId", userId);
                 HearingTool.this.startActivity(navigationIntent);
                 return true;
 
@@ -301,6 +334,7 @@ public class HearingTool extends AppCompatActivity implements TextToSpeech.OnIni
         } else {
             sentMessage.setText(USER_LABEL + ":    " + message);
         }
+        sentStringMessages.add(message);
         sentMessages.add(sentMessage);
 
         return sentMessage;
