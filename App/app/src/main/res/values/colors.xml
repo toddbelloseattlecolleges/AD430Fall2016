@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#848484</color>
+    <color name="colorPrimaryDark">#4e4e4e</color>
     <color name="colorAccent">#FF4081</color>
     <color name="hearing_tool_text">#FFFFFF</color>
     <color name="hearing_tool_messageBackground">#2e2e2e</color>
-    <color name="bg_gradient_start">#31244e</color>
-    <color name="bg_gradient_end">#6b394c</color>
+    <color name="hearing_tool_bg_gradient_start">#31244e</color>
+    <color name="hearing_tool_bg_gradient_end">#6b394c</color>
+    <color name="login_bg_gradient_start">#dfdfdf</color>
+    <color name="login_bg_gradient_end">#87c1ff</color>
 </resources>
