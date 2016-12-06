@@ -35,6 +35,7 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     public Location location;
     private TextView skypeStatus;
     private EditText skypeName;
+    private int userId;
 
     public MenuInterpreter() {
         refreshSkypeStatus = new RefreshSkypeStatus();
@@ -49,11 +50,6 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
 
-        refreshSkypeStatus.execute();
-        refreshVideoSwitch.execute();
-        refreshLocationSwitch.execute();
-        refreshSykpeName.execute();
-
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
         skypeStatus = (TextView) findViewById(R.id.skypeStatus);
@@ -62,8 +58,15 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         videoSwitch.setOnClickListener(this);
         locationSwitch.setOnClickListener(this);
 
+        refreshSkypeStatus.execute();
+        refreshVideoSwitch.execute();
+        refreshLocationSwitch.execute();
+        refreshSykpeName.execute();
+
         //getting the status from the database here in the separate class
-        status = new InterpreterStatus(1);
+        userId = getIntent().getIntExtra("userId", userId);
+        status = new InterpreterStatus(userId);
+
         //setting to false for debugging purposes
         updateLocationThread = new UpdateLocationThread(false, this);
         updateLocationThread.start();
@@ -149,6 +152,17 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("userId", userId);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        userId = savedInstanceState.getInt("userId");
+    }
 
     private class RefreshSkypeStatus extends AsyncTask<Void, Void, Boolean> {
         protected Boolean doInBackground(Void... asdf) {
