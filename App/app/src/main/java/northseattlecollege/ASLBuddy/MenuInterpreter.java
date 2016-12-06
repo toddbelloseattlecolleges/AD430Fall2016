@@ -6,8 +6,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -17,12 +18,12 @@ import android.widget.TextView;
  * Created 10/10/2016
  */
 
-public class MenuInterpreter extends AppCompatActivity {
+public class MenuInterpreter extends AppCompatActivity implements CompoundButton.OnClickListener {
 
-    private final UpdateSkypeStatus updateSkypeStatus;
-    private final UpdateVideoStatus updateVideoSwitch;
-    private final UpdateLocationStatus updateLocationSwitch;
-    private final UpdateSykpeName updateSykpeName;
+    private final RefreshSkypeStatus refreshSkypeStatus;
+    private final RefreshVideoStatus refreshVideoSwitch;
+    private final RefreshLocationStatus refreshLocationSwitch;
+    private final RefreshSykpeName refreshSykpeName;
     private final UpdateInterpreterLocation updateInterpreterLocation;
     private UpdateLocationThread updateLocationThread;
     private SharedPreferences mPrefs;
@@ -34,10 +35,10 @@ public class MenuInterpreter extends AppCompatActivity {
     private EditText skypeName;
 
     public MenuInterpreter() {
-        updateSkypeStatus = new UpdateSkypeStatus();
-        updateVideoSwitch = new UpdateVideoStatus();
-        updateLocationSwitch = new UpdateLocationStatus();
-        updateSykpeName = new UpdateSykpeName();
+        refreshSkypeStatus = new RefreshSkypeStatus();
+        refreshVideoSwitch = new RefreshVideoStatus();
+        refreshLocationSwitch = new RefreshLocationStatus();
+        refreshSykpeName = new RefreshSykpeName();
         updateInterpreterLocation = new UpdateInterpreterLocation();
     }
 
@@ -46,21 +47,43 @@ public class MenuInterpreter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_interpreter);
 
-        updateSkypeStatus.execute();
-        updateVideoSwitch.execute();
-        updateLocationSwitch.execute();
-        updateSykpeName.execute();
+        refreshSkypeStatus.execute();
+        refreshVideoSwitch.execute();
+        refreshLocationSwitch.execute();
+        refreshSykpeName.execute();
 
         videoSwitch = (Switch)findViewById(R.id.videoSwitch);
         locationSwitch = (Switch)findViewById(R.id.locationSwitch);
         skypeStatus = (TextView) findViewById(R.id.skypeStatus);
         skypeName = (EditText)findViewById(R.id.skypeName);
 
+        videoSwitch.setOnClickListener(this);
+        locationSwitch.setOnClickListener(this);
+
         //getting the status from the database here in the separate class
         status = new InterpreterStatus(1);
         locationService = new LocationService(this);
         //setting to false for debugging purposes
         updateLocationThread = new UpdateLocationThread(false, this);
+    }
+
+    private AsyncTask<Void, Void, Void> updateLocationStatusAsync(final boolean isChecked) {
+        return new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                status.setLocationStatus(isChecked);
+                return null;
+            }}.execute();
+    }
+
+    private AsyncTask<Void, Void, Void> updateVideoStatusAsync(final boolean isChecked) {
+        return new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                status.setVideoStatus(isChecked);
+                return null;
+            }
+        }.execute();
     }
 
     @Override
@@ -78,7 +101,21 @@ public class MenuInterpreter extends AppCompatActivity {
         updateInterpreterLocation.execute();
     }
 
-    private class UpdateSkypeStatus extends AsyncTask<Void, Void, Boolean> {
+    @Override
+    public void onClick(View v) {
+        if (!(v instanceof Switch))
+            return;
+
+        boolean checkState = ((Switch) v).isChecked();
+
+        if (v == videoSwitch)
+            updateVideoStatusAsync(checkState);
+        else if (v == locationSwitch)
+            updateLocationStatusAsync(checkState);
+    }
+
+
+    private class RefreshSkypeStatus extends AsyncTask<Void, Void, Boolean> {
         protected Boolean doInBackground(Void... asdf) {
 
             return SkypeResources.isSkypeClientInstalled(MenuInterpreter.this);
@@ -93,7 +130,7 @@ public class MenuInterpreter extends AppCompatActivity {
         }
     }
 
-    private class UpdateVideoStatus extends AsyncTask<Void, Void, Boolean> {
+    private class RefreshVideoStatus extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -105,7 +142,7 @@ public class MenuInterpreter extends AppCompatActivity {
         }
     }
 
-    private class UpdateLocationStatus extends AsyncTask<Void, Void, Boolean> {
+    private class RefreshLocationStatus extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -119,7 +156,7 @@ public class MenuInterpreter extends AppCompatActivity {
         }
     }
 
-    private class UpdateSykpeName extends AsyncTask<Void, Void, String>{
+    private class RefreshSykpeName extends AsyncTask<Void, Void, String>{
         @Override
         protected String doInBackground(Void... params) { return status.getSkypeName(); }
         protected void onPostExecute(String s) {
@@ -141,3 +178,4 @@ public class MenuInterpreter extends AppCompatActivity {
         }
     }
 }
+
