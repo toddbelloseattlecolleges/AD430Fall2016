@@ -1,19 +1,23 @@
 package northseattlecollege.ASLBuddy;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
+
+import northseattlecollege.ASLBuddy.fragments.CreateRequestFragment;
+import northseattlecollege.ASLBuddy.fragments.InstallSkypeFragment;
+import northseattlecollege.ASLBuddy.fragments.RequestErrorFragment;
+import northseattlecollege.ASLBuddy.fragments.SetRadiusFragment;
 
 /**
  * Author: Jesse Bernoudy
@@ -26,17 +30,25 @@ import android.widget.TextView;
  */
 
 public class CreateRequest extends AppCompatActivity
-        implements SetRadiusFragment.OnSetRadiusFragmentInteractionListener {
+        implements CreateRequestFragment.OnCreateRequestFragmentInteractionListener,
+        InstallSkypeFragment.OnInstallSkypeFragmentInteractionListener,
+        RequestErrorFragment.OnRequestErrorFragmentInteractionListener,
+        SetRadiusFragment.OnSetRadiusFragmentInteractionListener {
 
     public final static String REQUEST_TYPE = "northseattlecollege.ASLBuddy.REQUEST_TYPE";
     public final static String REQUEST_TYPE_VIDEO = "northseattlecollege.ASLBuddy.REQUEST_TYPE_VIDEO";
     public final static String REQUEST_TYPE_PHYSICAL = "northseattlecollege.ASLBuddy.REQUEST_TYPE_PHYSICAL";
+    public final static String REQUEST_TYPE_HEARING_TOOL = "northseattlecollege.ASLBuddy.REQUEST_TYPE_HEARING_TOOL";
 
     public final static String REQUEST_RADIUS = "northseattlecollege.ASLBuddy.REQUEST_RADIUS";
 
-    private String requestType;
+    public static void setError(boolean error) {
+        mIsError = error;
+    }
 
-    private SetRadiusFragment setRadiusFragment;
+    private static boolean mIsError = false;
+
+    private String mRequestType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,120 +56,123 @@ public class CreateRequest extends AppCompatActivity
         setContentView(R.layout.activity_create_request);
 
         Intent intent = getIntent();
-        requestType = intent.getStringExtra(REQUEST_TYPE);
+        mRequestType = intent.getStringExtra(REQUEST_TYPE);
 
-        InitializeUI();
+        initialize();
 
-        Button submitButton = (Button) findViewById(R.id.button_submit);
-        submitButton.setOnClickListener(new View.OnClickListener() {
+        Button cancelButton = (Button) findViewById(R.id.button_cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SubmitRequest();
-            }
-        });
-
-        // ToDo: remove back button once system back button is working
-        // Back button for easy navigation
-        Button backButton = (Button) findViewById(R.id.button_back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                mIsError = false;
                 finish();
                 Intent navigationIntent = new Intent(CreateRequest.this, MenuHOH.class);
                 CreateRequest.this.startActivity(navigationIntent);
             }
         });
-
-        final Spinner requestTypeSpinner = (Spinner) findViewById(R.id.spinner_request_type);
-        requestTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = ((TextView) view).getText().toString();
-                UpdateOtherEditView(selectedItem);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
     }
 
-    private void setupVideoRequest() {
-        TextView title = (TextView) findViewById(R.id.label_create_request);
-        title.setText(R.string.label_create_video_request);
-        if (!SkypeResources.isSkypeClientInstalled(getApplicationContext())) {
-            LinearLayout requestLayout = (LinearLayout) findViewById(R.id.layout_create_request);
-            requestLayout.setVisibility(View.GONE);
-            LinearLayout installSkypeLayout = (LinearLayout) findViewById(R.id.layout_install_skype);
-            installSkypeLayout.setVisibility(View.VISIBLE);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initialize();
+    }
 
-            Button installSkype = (Button) findViewById(R.id.button_install_skype);
-            installSkype.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SkypeResources.goToMarket(getApplicationContext());
-                }
-            });
+    private void initialize() {
 
-            Button cancel = (Button) findViewById(R.id.button_cancel);
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                    Intent navigationIntent = new Intent(CreateRequest.this, MenuHOH.class);
-                    CreateRequest.this.startActivity(navigationIntent);
-                }
-            });
+        if (mRequestType.compareTo(REQUEST_TYPE_VIDEO) == 0) {
+            TextView title = (TextView) findViewById(R.id.label_create_request);
+            title.setText(R.string.label_create_video_request);
+        } else {
+            TextView title = (TextView) findViewById(R.id.label_create_request);
+            title.setText(R.string.label_create_physical_request);
+        }
+
+        if (mIsError) {
+            Fragment requestErrorFragment = RequestErrorFragment.newInstance();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.create_request_fragment_container, requestErrorFragment);
+            transaction.commit();
+        } else if (mRequestType.compareTo(REQUEST_TYPE_VIDEO) == 0 && !SkypeResources.isSkypeClientInstalled(getApplicationContext())) {
+            Fragment installSkypeFragment = InstallSkypeFragment.newInstance();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.create_request_fragment_container, installSkypeFragment);
+            transaction.commit();
+        } else {
+            Fragment createRequestFragment = CreateRequestFragment.newInstance(mRequestType);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.create_request_fragment_container, createRequestFragment);
+            transaction.commit();
         }
     }
 
-    private void SubmitRequest() {
+    private void submitRequest(float radius) {
+
         Intent navigationIntent = new Intent(CreateRequest.this, RequestPending.class);
 
-        if (requestType.compareTo(REQUEST_TYPE_PHYSICAL) == 0) {
+        if (mRequestType.compareTo(REQUEST_TYPE_PHYSICAL) == 0) {
             // ToDo: how are physical requests handled?
             navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_PHYSICAL);
-            navigationIntent.putExtra(CreateRequest.REQUEST_RADIUS, setRadiusFragment.getRadius());
+            navigationIntent.putExtra(CreateRequest.REQUEST_RADIUS, radius);
         } else {
             navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_VIDEO);
         }
+
         finish();
         CreateRequest.this.startActivity(navigationIntent);
     }
 
-    private void InitializeUI() {
-        if (requestType.compareTo(REQUEST_TYPE_PHYSICAL) == 0) {
-            setupPhysicalRequest();
+    @Override
+    public void onRequestErrorFragmentInteraction(String requestType) {
+        mIsError = false;
+        if (requestType.compareTo(REQUEST_TYPE_HEARING_TOOL) == 0) {
+            finish();
+            Intent navigationIntent = new Intent(this, HearingTool.class);
+            navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_VIDEO);
+            startActivity(navigationIntent);
         } else {
-            setupVideoRequest();
-        }
-    }
-
-    private void setupPhysicalRequest() {
-        TextView title = (TextView) findViewById(R.id.label_create_request);
-        title.setText(R.string.label_create_physical_request);
-        // ToDo: Get default/saved radius from Settings
-        setRadiusFragment = SetRadiusFragment.newInstance(.25f);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.set_radius_fragment_container, setRadiusFragment);
-        transaction.commit();
-    }
-
-    private void UpdateOtherEditView(String selectedItem) {
-        EditText otherDescEditText = (EditText) findViewById(R.id.edit_description);
-        // ToDo: Replace hard-coded other with value from strings.xml
-        if (selectedItem.compareTo("Other") == 0) {
-            otherDescEditText.setEnabled(true);
-        } else {
-            otherDescEditText.setEnabled(false);
+            mRequestType = requestType;
+            initialize();
         }
     }
 
     @Override
-    public void onFragmentInteraction(float radius) {
+    public void onCreateRequestFragmentInteraction(float radius) {
+        submitRequest(radius);
+    }
+
+    @Override
+    public void onInstallSkypeFragmentInteraction() {
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_redirect_message)
+                .setTitle(R.string.dialog_title_warning);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.label_continue, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                SkypeResources.goToMarket(getApplicationContext());
+            }
+        });
+        builder.setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
 
     }
 
+    @Override
+    public void onSetRadiusFragmentInteraction(float radius) {
+
+    }
     /**
      * Method for inflating settings button into options menu
      * @param menu
