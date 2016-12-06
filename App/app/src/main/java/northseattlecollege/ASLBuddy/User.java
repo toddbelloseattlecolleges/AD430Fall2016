@@ -112,11 +112,6 @@ public class User implements Parcelable {
     }
 
     @Override
-    /**
-     * Method that writes the instances of the class to save
-     * @param dest the Parcel that is going to be sent
-     * @param flags unused
-     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.userId);
         dest.writeString(this.microsoftAPInfo);

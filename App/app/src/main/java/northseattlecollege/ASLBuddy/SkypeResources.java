@@ -67,6 +67,17 @@ public class SkypeResources {
         myContext.startActivity(myIntent);
     }
 
-
+    /**
+     * //TODO: connect this function with server api to get username
+     * Placeholder method should get username from the server once an interpreter has accepted the
+     * request, and this function can be used to pass the username to the SkypeURI for placing
+     * the call.
+     * @return String username,  the valid Skype name of the interpreter
+     */
+    public static String getUsernameFromServer()
+    {
+        String username = "username";
+        return username;
+    }
 
 }

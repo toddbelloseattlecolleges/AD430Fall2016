@@ -3,10 +3,6 @@ package northseattlecollege.ASLBuddy;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 class JsonObj {
 
@@ -50,30 +46,21 @@ class JsonObj {
     public double getLast_known_location_long(){return last_known_location_long;}
     public void setLast_known_location_long(double usrLong){last_known_location_long = usrLong;}
 
-    //example of getting nested arrays in a JSON Object
     @JsonProperty("ok_to_chat")
     private boolean ok_to_chat;
     public boolean getOk_to_chat(){return ok_to_chat;}
-    public void setOk_to_chat(Object usrVid){
-        //data comes out as a linkedHashMap with an arraylist for the arrays
-        if(((LinkedHashMap<String, ArrayList<Integer>>)usrVid).get("data").get(0) == 0){
-            ok_to_chat = false;
-        } else {
-            ok_to_chat = true;
-        }
-    }
+    public void setOk_to_chat(boolean usrVid){ok_to_chat = usrVid; }
 
     @JsonProperty("ok_to_show_location")
     private boolean ok_to_show_location;
     public boolean getOk_to_show_location(){return ok_to_show_location;}
-    public void setOk_to_show_location(Object usrLoc){
-        //data comes out as a linkedHashMap with an arraylist for the arrays
-        if(((LinkedHashMap<String, ArrayList<Integer>>)usrLoc).get("data").get(0) == 0){
-            ok_to_show_location = false;
-        } else {
-            ok_to_show_location = true;
-        }
-    }
+    public void setOk_to_show_location(boolean usrLoc){ ok_to_show_location = usrLoc; }
+
+    @JsonProperty("skype_username")
+    private String skype_username;
+    public String getSkype_user_name(){return skype_username;}
+    public void setSkype_user_name(String usrIn){skype_username = usrIn;}
+
 
     @JsonProperty("success")
     private String success;

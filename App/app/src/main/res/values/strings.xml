@@ -129,4 +129,6 @@
     <string name="label_continue">continue</string>
     <string name="dialog_redirect_message">You are about to leave ASL Buddy and open the Google Play Store</string>
     <string name="dialog_title_warning">WARNING!</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDdpX-ncWDYGfZkGauZi0-_TgFv1V8w8ww</string>
 </resources>
+
