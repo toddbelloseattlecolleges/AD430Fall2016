@@ -146,6 +146,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing, we want users to stay on LoginActivity
+    }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -488,8 +493,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     navigationIntent = new Intent(LoginActivity.this, MenuInterpreter.class);
                 } else {
                     navigationIntent = new Intent(LoginActivity.this, MenuHOH.class);
+                    navigationIntent.putExtra("userEmail", mEmail);
                 }
 
+                // pass userId to the following activity
                 navigationIntent.putExtra("userId", Integer.parseInt(successfulUserID));
                 LoginActivity.this.startActivity(navigationIntent);
 

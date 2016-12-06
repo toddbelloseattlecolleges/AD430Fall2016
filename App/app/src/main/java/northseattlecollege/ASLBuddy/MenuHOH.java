@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.Serializable;
 
@@ -21,10 +22,22 @@ import java.io.Serializable;
 
 public class MenuHOH extends AppCompatActivity implements Serializable {
 
+    // User related variables
+    private int userId;
+    private String userEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_hoh);
+
+        // Set userId and userEmail from successful login
+        userId = getIntent().getIntExtra("userId", userId);
+        userEmail = getIntent().getStringExtra("userEmail");
+
+        // Populate welcome greeting
+        TextView greeting  = (TextView) findViewById(R.id.welcomeHOH);
+        greeting.setText("Welcome, " + userEmail + "!");
 
         // Set main action button onClick attributes
         Button hearingToolButton = (Button) findViewById(R.id.hearing_tool_button);
@@ -58,6 +71,20 @@ public class MenuHOH extends AppCompatActivity implements Serializable {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("userId", userId);
+        savedInstanceState.putString("userEmail", userEmail);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        userId = savedInstanceState.getInt("userId");
+        userEmail = savedInstanceState.getString("userEmail");
+    }
+
+    @Override
     public void onBackPressed() {
         // do nothing, we want users to use the logout button
     }
@@ -86,6 +113,8 @@ public class MenuHOH extends AppCompatActivity implements Serializable {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent navigationIntent = new Intent(MenuHOH.this, Settings.class);
+                // pass userId to the following activity
+                navigationIntent.putExtra("userId", userId);
                 MenuHOH.this.startActivity(navigationIntent);
                 return true;
 
@@ -101,7 +130,8 @@ public class MenuHOH extends AppCompatActivity implements Serializable {
     private void startHearingTool() {
         finish();
         Intent navigationIntent = new Intent(MenuHOH.this, HearingTool.class);
-
+        // pass userId to the following activity
+        navigationIntent.putExtra("userId", userId);
         MenuHOH.this.startActivity(navigationIntent);
     }
 
@@ -113,6 +143,8 @@ public class MenuHOH extends AppCompatActivity implements Serializable {
         finish();
         Intent navigationIntent = new Intent(MenuHOH.this, CreateRequest.class);
         navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_VIDEO);
+        // pass userId to the following activity
+        navigationIntent.putExtra("userId", userId);
         MenuHOH.this.startActivity(navigationIntent);
     }
 
@@ -124,6 +156,8 @@ public class MenuHOH extends AppCompatActivity implements Serializable {
         finish();
         Intent navigationIntent = new Intent(MenuHOH.this, CreateRequest.class);
         navigationIntent.putExtra(CreateRequest.REQUEST_TYPE, CreateRequest.REQUEST_TYPE_PHYSICAL);
+        // pass userId to the following activity
+        navigationIntent.putExtra("userId", userId);
         MenuHOH.this.startActivity(navigationIntent);
     }
 
@@ -134,7 +168,6 @@ public class MenuHOH extends AppCompatActivity implements Serializable {
     private void logout() {
         finish();
         Intent navigationIntent = new Intent(MenuHOH.this, LoginActivity.class);
-
         MenuHOH.this.startActivity(navigationIntent);
     }
 }

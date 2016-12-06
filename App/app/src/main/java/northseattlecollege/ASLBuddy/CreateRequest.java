@@ -49,6 +49,7 @@ public class CreateRequest extends AppCompatActivity
     private static boolean mIsError = false;
 
     private String mRequestType;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class CreateRequest extends AppCompatActivity
 
         Intent intent = getIntent();
         mRequestType = intent.getStringExtra(REQUEST_TYPE);
+        userId = getIntent().getIntExtra("userId", userId);
 
         initialize();
 
@@ -197,6 +199,8 @@ public class CreateRequest extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent navigationIntent = new Intent(CreateRequest.this, Settings.class);
+                // pass userId to the following activity
+                navigationIntent.putExtra("userId", userId);
                 CreateRequest.this.startActivity(navigationIntent);
                 return true;
 
