@@ -132,7 +132,7 @@ public class Settings extends AppCompatPreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        this.finish();
+        finish();
     }
 
     /**
@@ -142,7 +142,7 @@ public class Settings extends AppCompatPreferenceActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
     }
 
