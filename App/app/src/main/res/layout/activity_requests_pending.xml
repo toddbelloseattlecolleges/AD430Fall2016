@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_requests_pending"
+    android:background="@drawable/login_bg_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -13,33 +14,49 @@
         android:text="Interpreter Found:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:paddingTop="20px"
         android:layout_centerHorizontal="true"
-        android:id="@+id/label_interpreter_found" />
+        android:visibility="invisible"
+        android:id="@+id/label_interpreter_found"
+        android:textSize="22sp"
+        />
     <TextView
         android:text="Finding Interpreter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/label_interpreter_found"
-        android:layout_centerVertical="true"
+
         android:layout_centerHorizontal="true"
-        android:id="@+id/label_request_pending" />
+        android:visibility="invisible"
+        android:id="@+id/label_request_pending"
+        android:textSize="22sp"
+        />
 
 
     <Button
         android:text="Call Interpreter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/label_finish_request"
         android:visibility="invisible"
-        android:layout_below="@id/label_request_pending"/>
+        android:layout_below="@id/label_request_pending"
+        android:layout_centerHorizontal="true"
+        android:layout_width="220dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:padding="15dp"
+        />
 
     <Button
         android:text="Skip to next user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/label_skip_user"
+        android:visibility="invisible"
         android:layout_below="@id/label_finish_request"
+        android:layout_centerHorizontal="true"
+        android:layout_width="220dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:padding="15dp"
        />
 
     <Button
@@ -47,6 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_back"
-        android:layout_below="@id/label_skip_user"/>
+        android:layout_below="@id/label_skip_user"
+        />
 
 </RelativeLayout>
