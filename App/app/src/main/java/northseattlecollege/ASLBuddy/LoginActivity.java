@@ -489,6 +489,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 } else {
                     navigationIntent = new Intent(LoginActivity.this, MenuHOH.class);
                 }
+
+                navigationIntent.putExtra("userId", Integer.parseInt(successfulUserID));
                 LoginActivity.this.startActivity(navigationIntent);
 
             } else {
