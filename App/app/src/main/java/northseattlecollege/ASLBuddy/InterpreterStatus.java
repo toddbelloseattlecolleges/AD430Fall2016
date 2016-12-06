@@ -1,19 +1,10 @@
 package northseattlecollege.ASLBuddy;
 
-import android.os.AsyncTask;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Class that updates the status by querying database using get and post data to update the
@@ -33,34 +24,15 @@ public class InterpreterStatus {
     public void setVideoStatus(boolean videoTrue){
         //call api here
         final boolean vid = videoTrue;
-        new AsyncTask<Boolean, Void, Void>(){
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Void doInBackground(Boolean... params) {
-                try {
-                    //call API to update the video status here, if true set true else false
-                    URL url = new URL("http://54.69.18.19:8081/setVideoStatus?userId=" +
-                                userId + "&status=" + (vid ? 1 : 0));
-                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                    InputStream inputStream = connection.getInputStream();
-//                        JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/setVideoStatus?userId=" +
-//                                userId + "&status=" + (vid ? 1 : 0)), JsonObj.class);
-//                    connection.disconnect();
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute(videoTrue);
+        try {
+            //call API to update the video status here, if true set true else false
+            URL url = new URL("http://54.69.18.19:8081/setVideoStatus?userId=" +
+                    userId + "&status=" + (vid ? 1 : 0));
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     //method that sets the video
@@ -84,32 +56,14 @@ public class InterpreterStatus {
     public void setLocationStatus(boolean locationTrue){
         //call api here
         final boolean loc = locationTrue;
-        new AsyncTask<Boolean, Void, Void>(){
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Void doInBackground(Boolean... params) {
-                ObjectMapper mapper = new ObjectMapper();
-                try{
-//                    JsonObj obj = mapper.readValue(new URL("http://54.69.18.19/setLocationStatus?userId=" +
-//                            userId + "&status=" + (loc ? 1 : 0)), JsonObj.class);
-                    URL url = new URL("http://54.69.18.19/setLocationStatus?userId=" +
-                            userId + "&status=" + (loc ? 1 : 0));
-                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                    InputStream inputStream = connection.getInputStream();
-                } catch (Exception e){
-                    System.out.println(e);
-                }
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute(locationTrue);
+        try{
+            URL url = new URL("http://54.69.18.19/setLocationStatus?userId=" +
+                    userId + "&status=" + (loc ? 1 : 0));
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     //method that sets the location status in the activity

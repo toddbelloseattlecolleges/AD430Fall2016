@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -56,11 +57,29 @@ public class MenuInterpreter extends AppCompatActivity {
         skypeStatus = (TextView) findViewById(R.id.skypeStatus);
         skypeName = (EditText)findViewById(R.id.skypeName);
 
+        videoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //if the interpreter has selected to do video services, turn on the settings
+                SendVideoStatusToServer sendVideoStatusToServer = new SendVideoStatusToServer();
+                sendVideoStatusToServer.execute(isChecked);
+            }
+        });
+
+        locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //if the interpreter has selected to do location services, turn on the settings
+                SendLocationStatusToServer sendLocationStatusToServer = new SendLocationStatusToServer();
+                sendLocationStatusToServer.execute(isChecked);
+            }
+        });
+
         //getting the status from the database here in the separate class
         status = new InterpreterStatus(1);
         locationService = new LocationService(this);
         //setting to false for debugging purposes
         updateLocationThread = new UpdateLocationThread(false, this);
+        updateLocationThread.start();
+
     }
 
     @Override
@@ -74,8 +93,37 @@ public class MenuInterpreter extends AppCompatActivity {
         this.location = location;
     }
 
-    public void SendLocationToServer(){
+    public void sendLocationToServer(){
         updateInterpreterLocation.execute();
+    }
+
+    private class SendLocationStatusToServer extends AsyncTask<Boolean, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Boolean... param){
+            status.setLocationStatus(param[0]);
+            return param[0];
+        }
+
+        protected void onPostExecute(Boolean isLocationServicesOn) {
+            if(updateLocationThread.isAlive()){
+                //kills thread
+                updateLocationThread.kill();
+            }
+            updateLocationThread.setLocationStatusOn(isLocationServicesOn);
+        }
+
+    }
+
+    private class SendVideoStatusToServer extends AsyncTask<Boolean, Void, Void> {
+        @Override
+        protected Void doInBackground(Boolean... param){
+            status.setVideoStatus(param[0]);
+            return null;
+        }
+
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 
     private class UpdateSkypeStatus extends AsyncTask<Void, Void, Boolean> {
@@ -114,8 +162,11 @@ public class MenuInterpreter extends AppCompatActivity {
 
         protected void onPostExecute(Boolean status) {
             locationSwitch.setChecked(status);
+            if(updateLocationThread.isAlive()){
+                //kills thread
+                updateLocationThread.kill();
+            }
             updateLocationThread.setLocationStatusOn(status);
-            updateLocationThread.start();
         }
     }
 

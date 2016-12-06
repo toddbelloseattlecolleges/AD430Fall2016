@@ -32,7 +32,7 @@ public class UpdateLocationThread extends Thread{
                     @Override
                     public void run() {
                         //code here for the actual database update
-                        ((MenuInterpreter)menuInterpreter).SendLocationToServer();
+                        ((MenuInterpreter)menuInterpreter).sendLocationToServer();
                     }
                 });
                 Thread.sleep(360 * 1000);
@@ -40,5 +40,12 @@ public class UpdateLocationThread extends Thread{
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Ends the current thread
+     */
+    public void kill() {
+        locationStatusOn = false;
     }
 }
