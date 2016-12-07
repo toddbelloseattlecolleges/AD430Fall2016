@@ -59,14 +59,13 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         videoSwitch.setOnClickListener(this);
         locationSwitch.setOnClickListener(this);
 
+        //get switch status from server
+        userId = getIntent().getIntExtra("userId", userId);
+        status = new InterpreterStatus(userId);
         refreshSkypeStatus.execute();
         refreshVideoSwitch.execute();
         refreshLocationSwitch.execute();
         refreshSykpeName.execute();
-
-        //getting the status from the database here in the separate class
-        userId = getIntent().getIntExtra("userId", userId);
-        status = new InterpreterStatus(userId);
 
         //setting to false for debugging purposes
         updateLocationThread = new UpdateLocationThread(false, this);
