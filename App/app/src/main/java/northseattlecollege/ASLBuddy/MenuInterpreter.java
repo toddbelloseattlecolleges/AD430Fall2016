@@ -104,6 +104,9 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     }
 
     public void setupUpdateLocationThread(boolean status){
+        if(updateLocationThread != null){
+            updateLocationThread.kill();
+        }
         updateLocationThread = new UpdateLocationThread(status, this);
         updateLocationThread.start();
     }
@@ -118,7 +121,6 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     }
 
     public void sendLocationToServer(){
-        updateLocationThread.kill();
         updateInterpreterLocation = new UpdateInterpreterLocation();
         updateInterpreterLocation.execute();
     }
@@ -228,6 +230,7 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
 
         protected void onPostExecute(Boolean status) {
             //kills previous thread before starting a new one
+            //start the thread here on activity signin
             setupUpdateLocationThread(status);
             locationSwitch.setChecked(status);
         }
