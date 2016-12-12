@@ -13,50 +13,51 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by nathanflint on 11/7/16.
  */
 public class LocationService implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener {
     private GoogleApiClient mGoogleApiClient;
-    private Location location;
-    private LocationRequest mLocationRequest;
-    public Context callBackActivity;
+    private LocationListener locationListener;
+    private LocationRequest locationRequest;
 
-    public LocationService(Context mainActivity) {
-        callBackActivity = mainActivity;
+    public LocationService(Context mainActivity, LocationListener locationListener) {
         mGoogleApiClient = new GoogleApiClient.Builder(mainActivity)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mLocationRequest = LocationRequest.create()
+        this.locationListener = locationListener;
+        locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setSmallestDisplacement(10) //displacement in meters
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setSmallestDisplacement(0) //displacement in meters
+                .setInterval(TimeUnit.MINUTES.toMillis(5))        // 5 mins, in milliseconds
+                .setFastestInterval(TimeUnit.MINUTES.toMillis(5)); // 5 mins, in milliseconds
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        onLocationChanged(location);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+    public void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationListener);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
+    public void startLocationUpdates() {
         try {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            this.location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            ((MenuInterpreter)callBackActivity).SetLocation(this.location);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, locationListener);
         } catch (SecurityException e){
             e.printStackTrace();
         }

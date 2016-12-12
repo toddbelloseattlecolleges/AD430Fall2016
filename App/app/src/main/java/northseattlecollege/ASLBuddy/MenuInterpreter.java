@@ -3,23 +3,21 @@ package northseattlecollege.ASLBuddy;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 /**
  * Author: Nathan Flint
@@ -27,20 +25,11 @@ import android.view.MenuItem;
  */
 
 public class MenuInterpreter extends AppCompatActivity implements MenuInterpreterViewable {
-    private final UpdateInterpreterLocation updateInterpreterLocation;
-    private UpdateLocationThread updateLocationThread;
-    private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
-    public Location location;
     private TextView skypeStatus;
     private TextView skypeName;
     private int userId;
     private MenuInterpreterViewModel viewModel;
-    private InterpreterStatus status;
-
-    public MenuInterpreter() {
-        updateInterpreterLocation = new UpdateInterpreterLocation();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +76,6 @@ public class MenuInterpreter extends AppCompatActivity implements MenuInterprete
 
         // Get User Id
         userId = getIntent().getIntExtra("userId", userId);
-        status = new InterpreterStatus(userId);
-
-        //setting to false for debugging purposes
-        updateLocationThread = new UpdateLocationThread(false, this);
-        updateLocationThread.start();
 
         //setting the logout button handler
         Button logoutButton = (Button) findViewById(R.id.logout_button);
@@ -174,14 +158,6 @@ public class MenuInterpreter extends AppCompatActivity implements MenuInterprete
         // do nothing, we want users to use the logout button
     }
 
-    public void SetLocation(Location location) {
-        this.location = location;
-    }
-
-    public void sendLocationToServer(){
-        updateInterpreterLocation.execute();
-    }
-
     /**
      * Method for inflating settings button into options menu
      * @param menu
@@ -257,20 +233,6 @@ public class MenuInterpreter extends AppCompatActivity implements MenuInterprete
     @Override
     public Context getAppContext() {
         return getApplicationContext();
-    }
-
-    private class UpdateInterpreterLocation extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void... params) {
-            if(location != null){
-                status.setInterpreterLocation(location.getLatitude(), location.getLongitude());
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
 }
 
