@@ -1,5 +1,6 @@
 package northseattlecollege.ASLBuddy;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -24,16 +26,17 @@ import android.view.MenuItem;
  * Created 10/10/2016
  */
 
-public class MenuInterpreter extends AppCompatActivity {
+public class MenuInterpreter extends AppCompatActivity implements MenuInterpreterViewable {
     private final UpdateInterpreterLocation updateInterpreterLocation;
     private UpdateLocationThread updateLocationThread;
     private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
-    public InterpreterStatus status;
     public Location location;
     private TextView skypeStatus;
     private TextView skypeName;
     private int userId;
+    private MenuInterpreterViewModel viewModel;
+    private InterpreterStatus status;
 
     public MenuInterpreter() {
         updateInterpreterLocation = new UpdateInterpreterLocation();
@@ -58,8 +61,13 @@ public class MenuInterpreter extends AppCompatActivity {
         videoSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean checkState = ((Switch) v).isChecked();
-                updateVideoStatusAsync(checkState);
+                final boolean isVideoAvailable = ((Switch) v).isChecked();
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewModel.setVideoStatus(isVideoAvailable);
+                    }
+                });
             }
         });
 
@@ -67,26 +75,25 @@ public class MenuInterpreter extends AppCompatActivity {
         locationSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean checkState = ((Switch) v).isChecked();
-                updateLocationStatusAsync(checkState);
+                final boolean isLocationAvailable = ((Switch) v).isChecked();
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewModel.setLocationStatus(isLocationAvailable);
+                    }
+                });
             }
         });
 
-        //get switch status from server
+        // Get User Id
         userId = getIntent().getIntExtra("userId", userId);
         status = new InterpreterStatus(userId);
-        new RefreshSkypeAppStatus().execute();
-        new RefreshVideoStatus().execute();
-        new RefreshLocationStatus().execute();
-        new RefreshSkypeName().execute();
 
         //setting to false for debugging purposes
         updateLocationThread = new UpdateLocationThread(false, this);
         updateLocationThread.start();
 
         //setting the logout button handler
-
-
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +103,32 @@ public class MenuInterpreter extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        createViewModel();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("userId", userId);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        userId = savedInstanceState.getInt("userId");
+    }
+
     private void PromptSkypeNameChange() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Change Skype Name");
+        builder.setTitle("New Skype Name");
 
         // Set up the input
         final EditText input = new EditText(this);
+        CharSequence name = skypeName.getText() == "Not Set" ? "" : skypeName.getText();
+        input.setText(name);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
@@ -110,8 +137,13 @@ public class MenuInterpreter extends AppCompatActivity {
         builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newName = input.getText().toString();
-                updateSkypeNameAsync(newName);
+                final String newName = input.getText().toString();
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewModel.setSkypeName(newName);
+                    }
+                });
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -124,43 +156,18 @@ public class MenuInterpreter extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateLocationStatusAsync(final boolean isChecked) {
-        new AsyncTask<Void, Void, Void>() {
+    private void createViewModel() {
+        AsyncTask.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... params) {
-                status.setLocationStatus(isChecked);
-                return null;
+            public void run() {
+                MenuInterpreter.this.viewModel = new MenuInterpreterViewModel(
+                        MenuInterpreter.this,
+                        MenuInterpreter.this.userId);
+                onViewModelUpdated();
             }
-        }.execute();
+        });
     }
 
-    private void updateVideoStatusAsync(final boolean isChecked) {
-         new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                status.setVideoStatus(isChecked);
-                return status.getVideoStatus();
-            }
-
-            protected void onPostExecute(Boolean status) {
-                videoSwitch.setChecked(status);
-            }
-        }.execute();
-    }
-
-    private void updateSkypeNameAsync(final String newName) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                status.setSkypeName(newName);
-                return null;
-            }
-
-            protected void onPostExecute(Void status) {
-                new RefreshSkypeName().execute();
-            }
-        }.execute();
-    }
 
     @Override
     public void onBackPressed() {
@@ -209,18 +216,6 @@ public class MenuInterpreter extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt("userId", userId);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        userId = savedInstanceState.getInt("userId");
-    }
-
     /**
      * Terminates this user's session and returns to the login/signup page,
      * starts activity LoginActivity.java using Android Intent.
@@ -231,97 +226,37 @@ public class MenuInterpreter extends AppCompatActivity {
         MenuInterpreter.this.startActivity(navigationIntent);
     }
 
-    private class RefreshSkypeAppStatus extends AsyncTask<Void, Void, Boolean> {
-        protected Boolean doInBackground(Void... asdf) {
+    @Override
+    public void onViewModelUpdated() {
+        Context context = this.getApplicationContext();
+        Handler mainHandler = new Handler(context.getMainLooper());
 
-            return SkypeResources.isSkypeClientInstalled(MenuInterpreter.this);
-        }
-
-        protected void onPostExecute(Boolean isSkypeInstalled) {
-            String statusText = isSkypeInstalled ? "Installed" : "Not Installed";
-            int statusTextColor = isSkypeInstalled ? Color.GREEN : Color.RED;
-            skypeStatus.setTextColor(statusTextColor);
-            skypeStatus.setText(statusText);
-
-            if (!isSkypeInstalled)
-                showSkypeNotReadyDialog();
-        }
-    }
-
-    private void showSkypeNotReadyDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Warning");
-
-        // Set up the input
-        final TextView message = new TextView(this);
-        message.setText("Skype is not installed or your Skype name is not set." +
-                "Skype must be installed and a Skype name must set inorder to" +
-                "receive video requests. Please install Skype and click your Skype name to change it.");
-
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        builder.setView(message);
-
-        // Set up the buttons
-        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+        Runnable myRunnable = new Runnable() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                updateVideoStatusAsync(false);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+            public void run() {
+                videoSwitch.setChecked(viewModel.isVideoStatusEnabled());
+                videoSwitch.setEnabled(viewModel.isSkypeProperlyConfigured());
+                locationSwitch.setChecked(viewModel.isLocationStatusEnabled());
 
-        builder.show();
+                boolean hasSkypeName = viewModel.hasSkypeName();
+                String nameText = hasSkypeName ? viewModel.getSkypeName() : "Not Set";
+                int nameColor = hasSkypeName ? Color.GREEN : Color.RED;
+                skypeName.setText(nameText);
+                skypeName.setTextColor(nameColor);
+
+                boolean isSkypeInstalled = viewModel.isSkypeInstalled();
+                String installedText = isSkypeInstalled ? "Installed" : "Not Installed";
+                int installedColor = isSkypeInstalled ? Color.GREEN : Color.RED;
+                skypeStatus.setTextColor(installedColor);
+                skypeStatus.setText(installedText);
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
-    private class RefreshVideoStatus extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            return status.getVideoStatus();
-        }
-
-        protected void onPostExecute(Boolean status) {
-            videoSwitch.setChecked(status);
-        }
-    }
-
-    private class RefreshLocationStatus extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            return status.getLocationStatus();
-        }
-
-        protected void onPostExecute(Boolean status) {
-            locationSwitch.setChecked(status);
-            if(updateLocationThread.isAlive()){
-                //kills thread
-                updateLocationThread.kill();
-            }
-            updateLocationThread.setLocationStatusOn(status);
-        }
-    }
-
-    private class RefreshSkypeName extends AsyncTask<Void, Void, String>{
-        @Override
-        protected String doInBackground(Void... params) { return status.getSkypeName(); }
-        protected void onPostExecute(String s) {
-            if (s == null || s.equals("")) {
-                skypeName.setText("Not Set");
-                skypeName.setTextColor(Color.RED);
-            }
-            else {
-                skypeName.setText(s);
-                skypeName.setTextColor(Color.GREEN);
-            }
-
-
-        }
+    @Override
+    public Context getAppContext() {
+        return getApplicationContext();
     }
 
     private class UpdateInterpreterLocation extends AsyncTask<Void, Void, Void>{
