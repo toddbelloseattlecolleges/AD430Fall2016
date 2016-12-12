@@ -28,11 +28,12 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     private final RefreshVideoStatus refreshVideoSwitch;
     private final RefreshLocationStatus refreshLocationSwitch;
     private final RefreshSykpeName refreshSykpeName;
-    private final UpdateInterpreterLocation updateInterpreterLocation;
+    private UpdateInterpreterLocation updateInterpreterLocation;
     private UpdateLocationThread updateLocationThread;
     private SharedPreferences mPrefs;
     private Switch videoSwitch, locationSwitch;
     public InterpreterStatus status;
+    public LocationService locationService;
     public Location location;
     private TextView skypeStatus;
     private EditText skypeName;
@@ -68,8 +69,8 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         refreshSykpeName.execute();
 
         //setting to false for debugging purposes
-        updateLocationThread = new UpdateLocationThread(false, this);
-        updateLocationThread.start();
+        locationService = new LocationService(this);
+        setupUpdateLocationThread(false);
 
         //setting the logout button handler
         Button logoutButton = (Button) findViewById(R.id.logout_button);
@@ -85,6 +86,8 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         return new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                //kills the current thread, starts the thread again
+                setupUpdateLocationThread(isChecked);
                 status.setLocationStatus(isChecked);
                 return null;
             }}.execute();
@@ -100,6 +103,14 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         }.execute();
     }
 
+    public void setupUpdateLocationThread(boolean status){
+        if(updateLocationThread != null){
+            updateLocationThread.kill();
+        }
+        updateLocationThread = new UpdateLocationThread(status, this);
+        updateLocationThread.start();
+    }
+
     @Override
     public void onBackPressed() {
         // do nothing, we want users to use the logout button
@@ -110,6 +121,7 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
     }
 
     public void sendLocationToServer(){
+        updateInterpreterLocation = new UpdateInterpreterLocation();
         updateInterpreterLocation.execute();
     }
 
@@ -217,12 +229,10 @@ public class MenuInterpreter extends AppCompatActivity implements CompoundButton
         }
 
         protected void onPostExecute(Boolean status) {
+            //kills previous thread before starting a new one
+            //start the thread here on activity signin
+            setupUpdateLocationThread(status);
             locationSwitch.setChecked(status);
-            if(updateLocationThread.isAlive()){
-                //kills thread
-                updateLocationThread.kill();
-            }
-            updateLocationThread.setLocationStatusOn(status);
         }
     }
 

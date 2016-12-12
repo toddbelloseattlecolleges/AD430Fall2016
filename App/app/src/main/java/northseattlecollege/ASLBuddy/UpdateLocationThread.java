@@ -1,7 +1,6 @@
 package northseattlecollege.ASLBuddy;
 
 import android.content.Context;
-import android.os.Handler;
 
 /**
  * Method that calls the script to update the current location of the interpreter
@@ -13,7 +12,6 @@ import android.os.Handler;
 public class UpdateLocationThread extends Thread{
     private boolean locationStatusOn;
     private Context menuInterpreter;
-    private final Handler mHandler = new Handler();
 
     public UpdateLocationThread(boolean locationStatus, Context menu){
         this.locationStatusOn = locationStatus;
@@ -28,13 +26,9 @@ public class UpdateLocationThread extends Thread{
     public void run(){
         while (locationStatusOn) {
             try {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        //code here for the actual database update
-                        ((MenuInterpreter)menuInterpreter).sendLocationToServer();
-                    }
-                });
+                //code here for the actual database update
+                ((MenuInterpreter)menuInterpreter).sendLocationToServer();
+                System.out.println("test");
                 Thread.sleep(360 * 1000);
             } catch (Exception e) {
                 e.printStackTrace();

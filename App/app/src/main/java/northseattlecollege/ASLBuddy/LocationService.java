@@ -33,8 +33,8 @@ public class LocationService implements GoogleApiClient.ConnectionCallbacks,
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setSmallestDisplacement(10) //displacement in meters
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setInterval(100 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(60 * 1000); // 60 second, in milliseconds
         mGoogleApiClient.connect();
     }
 
