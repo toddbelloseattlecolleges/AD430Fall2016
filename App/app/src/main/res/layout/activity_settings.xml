@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_settings"
+    android:layout_centerHorizontal="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="northseattlecollege.ASLBuddy.Settings">
+
+    <TextView
+        android:text="App Version:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:id="@+id/appVerView"
+        android:textSize="24sp"
+        android:layout_below="@+id/displayLatLng"
+        android:layout_alignLeft="@+id/displayLatLng"
+        android:layout_alignStart="@+id/displayLatLng" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/appVerView"
+        android:id="@+id/appVersion"
+        android:layout_toRightOf="@+id/locationTog"
+        android:textSize="24sp"
+        android:text="*"
+        android:layout_alignRight="@+id/toggleDisturb"
+        android:layout_alignEnd="@+id/toggleDisturb" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:textOff="Off"
+        android:textOn="On"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleDisturb"
+        android:layout_alignBaseline="@+id/doNotDisturb"
+        android:layout_alignBottom="@+id/doNotDisturb"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="27dp"
+        android:layout_marginEnd="27dp"
+        android:onClick="toggleDoNotDisturb" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:textOff="Off"
+        android:textOn="On"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleLocation"
+        android:layout_below="@+id/editTextFullname"
+        android:layout_alignLeft="@+id/toggleDisturb"
+        android:layout_alignStart="@+id/toggleDisturb"
+        android:onClick="toggleLocationStatus"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:text="Full Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameView"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:background="@color/login_bg_gradient_start"
+        android:textAlignment="center"
+        android:ems="10"
+        android:id="@+id/editTextFullname"
+        android:textSize="30sp"
+        android:layout_below="@+id/nameView"
+        android:padding="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Device Lat/Long:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:id="@+id/displayLatLng"
+        android:textSize="24sp"
+        android:layout_below="@+id/toggleDisturb"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView7"
+        android:layout_alignBaseline="@+id/displayLatLng"
+        android:layout_alignBottom="@+id/displayLatLng"
+        android:layout_alignRight="@+id/toggleDisturb"
+        android:layout_alignEnd="@+id/toggleDisturb"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_alignLeft="@+id/toggleDisturb"
+        android:layout_alignStart="@+id/toggleDisturb" />
+
+    <TextView
+        android:text="Do Not Disturb:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:id="@+id/doNotDisturb"
+        android:textSize="24sp"
+        android:layout_below="@+id/toggleLocation"
+        android:layout_alignLeft="@+id/locationTog"
+        android:layout_alignStart="@+id/locationTog" />
+
+    <TextView
+        android:text="Location Enabled:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationTog"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@+id/toggleLocation"
+        android:layout_alignBottom="@+id/toggleLocation"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/apply_button"
+        style="?android:textAppearanceMedium"
+        android:layout_below="@+id/physical_interpreter_button"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="Apply"
+        android:textStyle="bold"
+        android:background="@color/login_bg_gradient_end" />
+
+</RelativeLayout>

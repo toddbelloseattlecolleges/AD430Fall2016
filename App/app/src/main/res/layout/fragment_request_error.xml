@@ -1,0 +1,45 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="northseattlecollege.ASLBuddy.fragments.RequestErrorFragment">
+
+    <LinearLayout
+        android:id="@+id/layout_install_skype"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:text="@string/label_request_error"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/button_increase_range"
+            android:layout_width="200dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/label_increase_range"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_video_request"
+            android:layout_width="200dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:text="@string/video_interpreter"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_hearing_tool"
+            android:layout_width="200dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:text="@string/hearing_tool"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</FrameLayout>
